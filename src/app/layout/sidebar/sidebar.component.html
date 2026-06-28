@@ -1,0 +1,253 @@
+@if (mobileOpen()) {
+  <div
+    class="fixed inset-0 z-20 bg-[var(--color-neutral-900)]/40 md:hidden"
+    aria-hidden="true"
+    (click)="mobileClose.emit()"
+  ></div>
+}
+
+<aside
+  class="flex flex-col shrink-0 bg-[var(--color-surface-low)] fixed top-0 left-0 z-30 h-screen w-[280px] transition-transform duration-300 ease-in-out md:static md:h-full md:z-auto md:translate-x-0 md:transition-[width] md:duration-300"
+  [ngClass]="{
+    '-translate-x-full': !mobileOpen(),
+    'translate-x-0': mobileOpen(),
+    'md:w-[240px]': !collapsed(),
+    'md:w-[80px]': collapsed(),
+  }"
+>
+  <div class="flex items-center gap-2 h-[60px] px-5 shrink-0">
+    <div class="shrink-0">
+      <span class="text-[var(--color-primary-container)]" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+          <path
+            d="M14 2L25.124 8.5V21.5L14 28L2.876 21.5V8.5L14 2Z"
+            fill="var(--color-primary-container)"
+            fill-opacity="0.12"
+            stroke="var(--color-primary-container)"
+            stroke-width="1.8"
+          />
+          <path
+            d="M9 14h10M14 9v10"
+            stroke="var(--color-primary-container)"
+            stroke-width="1.8"
+            stroke-linecap="round"
+          />
+        </svg>
+      </span>
+    </div>
+
+<span
+  class="font-bold text-[20px] tracking-widest text-[var(--color-neutral-900)] uppercase 
+         overflow-hidden whitespace-nowrap max-w-[160px] opacity-100
+         transition-[max-width,opacity] duration-300 ease-in-out"
+  [class.md:max-w-0]="collapsed()"
+  [class.md:opacity-0]="collapsed()"
+  [class.md:pointer-events-none]="collapsed()"
+>
+  TASKLY
+</span>
+  </div>
+
+  <nav class="flex-1 overflow-y-auto py-3" aria-label="Sidebar navigation">
+    <ul class="flex flex-col gap-0.5 px-2" role="list">
+      @for (item of navItems; track item.route) {
+        <li role="listitem">
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="bg-[var(--color-surface)] text-[var(--color-primary-container)] font-semibold"
+            [routerLinkActiveOptions]="{ exact: true }"
+            (click)="mobileClose.emit()"
+            class="flex items-center rounded-[5px] text-[0.875rem] font-medium hover:bg-[var(--color-surface)] hover:text-[var(--color-primary-container)] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-[var(--color-primary-container)]"
+            [attr.aria-label]="collapsed() ? item.label : null"
+            [attr.title]="collapsed() ? item.label : null"
+          >
+            <span
+              class="flex items-center justify-center shrink-0 w-[56px] h-[40px]"
+              aria-hidden="true"
+            >
+              <span class="w-[20px] h-[20px]">
+                @switch (item.icon) {
+                  @case ("projects") {
+                    <svg viewBox="0 0 20 20" fill="currentColor">
+                      <rect x="2" y="2" width="7" height="7" rx="1.5" />
+                      <rect x="11" y="2" width="7" height="7" rx="1.5" />
+                      <rect x="2" y="11" width="7" height="7" rx="1.5" />
+                      <rect x="11" y="11" width="7" height="7" rx="1.5" />
+                    </svg>
+                  }
+                  @case ("epics") {
+                    <svg
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    >
+                      <rect x="7" y="1.5" width="6" height="4" rx="1" />
+                      <rect x="1" y="13" width="5" height="4" rx="1" />
+                      <rect x="7.5" y="13" width="5" height="4" rx="1" />
+                      <rect x="14" y="13" width="5" height="4" rx="1" />
+                      <line x1="10" y1="5.5" x2="10" y2="9" />
+                      <line x1="3.5" y1="9" x2="16.5" y2="9" />
+                      <line x1="3.5" y1="9" x2="3.5" y2="13" />
+                      <line x1="10" y1="9" x2="10" y2="13" />
+                      <line x1="16.5" y1="9" x2="16.5" y2="13" />
+                    </svg>
+                  }
+                  @case ("tasks") {
+                    <svg
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    >
+                      <line x1="7" y1="5" x2="17" y2="5" />
+                      <line x1="7" y1="10" x2="17" y2="10" />
+                      <line x1="7" y1="15" x2="17" y2="15" />
+                      <polyline points="3,4 4.5,5.5 7,3" />
+                      <polyline points="3,9 4.5,10.5 7,8" />
+                      <polyline points="3,14 4.5,15.5 7,13" />
+                    </svg>
+                  }
+                  @case ("members") {
+                    <svg
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    >
+                      <circle cx="8" cy="6" r="3" />
+                      <path d="M2 17c0-3.314 2.686-5 6-5s6 1.686 6 5" />
+                      <path d="M14 5a3 3 0 0 1 0 6" stroke-linecap="round" />
+                      <path
+                        d="M17 17c0-2.5-1.5-4-3.5-4.5"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+                  }
+                  @case ("details") {
+                    <svg
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                    >
+                      <circle cx="10" cy="10" r="8" />
+                      <line
+                        x1="10"
+                        y1="9"
+                        x2="10"
+                        y2="14"
+                        stroke-linecap="round"
+                      />
+                      <circle
+                        cx="10"
+                        cy="6.5"
+                        r="0.7"
+                        fill="currentColor"
+                        stroke="none"
+                      />
+                    </svg>
+                  }
+                }
+              </span>
+            </span>
+
+           <!-- Nav item label -->
+<span
+  class="overflow-hidden whitespace-nowrap leading-none select-none pr-3 
+         max-w-[200px] opacity-100
+         transition-[max-width,opacity] duration-300 ease-in-out"
+  [class.md:max-w-0]="collapsed()"
+  [class.md:opacity-0]="collapsed()"
+  [class.md:pointer-events-none]="collapsed()"
+  [attr.aria-hidden]="collapsed()"
+>
+  {{ item.label }}
+</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <div
+    class="shrink-0 pb-4 pt-3 flex flex-col gap-0.5 border-t border-[var(--color-surface-3)]"
+  >
+    <button
+      type="button"
+      (click)="collapseToggle.emit()"
+      [attr.aria-label]="collapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+      class="hidden md:flex items-center w-full rounded-[10px] text-[0.875rem] font-medium mx-2 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-body)] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-[var(--color-primary-container)]"
+    >
+      <span
+        class="flex items-center justify-center shrink-0 w-[56px] h-[40px] transition-transform duration-300"
+        [class.rotate-180]="!collapsed()"
+        aria-hidden="true"
+      >
+        <span class="w-[20px] h-[20px]">
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <polyline points="7,4 13,10 7,16" />
+          </svg>
+        </span>
+      </span>
+      <!-- Collapse button label -->
+<span
+  class="overflow-hidden whitespace-nowrap pr-3 
+         max-w-[120px] opacity-100
+         transition-[max-width,opacity] duration-300 ease-in-out"
+  [class.md:max-w-0]="collapsed()"
+  [class.md:opacity-0]="collapsed()"
+  [class.md:pointer-events-none]="collapsed()"
+>
+  Collapse
+</span>
+    </button>
+
+    <button
+      type="button"
+      (click)="logoutClick.emit()"
+      class="flex items-center w-full rounded-[10px] mx-2 text-[0.875rem] font-medium text-[var(--color-error)] hover:bg-red-50 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-[var(--color-error)]"
+      aria-label="Log out"
+    >
+      <span
+        class="flex items-center justify-center shrink-0 w-[56px] h-[40px]"
+        aria-hidden="true"
+      >
+        <span class="w-[20px] h-[20px]">
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+          >
+            <path
+              d="M7 3H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h4"
+              stroke-linecap="round"
+            />
+            <polyline
+              points="13,6 18,10 13,14"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <line x1="7" y1="10" x2="18" y2="10" stroke-linecap="round" />
+          </svg>
+        </span>
+      </span>
+      <span
+  class="overflow-hidden whitespace-nowrap pr-3 
+         max-w-[120px] opacity-100
+         transition-[max-width,opacity] duration-300 ease-in-out"
+  [class.md:max-w-0]="collapsed()"
+  [class.md:opacity-0]="collapsed()"
+  [class.md:pointer-events-none]="collapsed()"
+>
+        Logout
+      </span>
+    </button>
+  </div>
+</aside>

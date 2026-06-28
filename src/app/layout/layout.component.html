@@ -1,0 +1,26 @@
+<div class="flex h-screen overflow-hidden bg-[var(--color-background)]">
+  <app-sidebar
+    [collapsed]="sidebarCollapsed()"
+    [mobileOpen]="mobileMenuOpen()"
+    (collapseToggle)="toggleCollapse()"
+    (mobileClose)="closeMobileMenu()"
+    (logoutClick)="onLogout()"
+  />
+
+  <div class="flex flex-col flex-1 min-w-0 overflow-hidden">
+    <app-header (menuToggle)="toggleMobileMenu()" />
+
+    <main
+      class="flex-1 overflow-y-auto pb-[64px] md:pb-0 bg-[var(--color-background)]"
+      id="main-content"
+      role="main"
+      aria-label="Page content"
+    >
+      <div class="p-4 md:p-6 lg:p-8">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
+</div>
+
+<app-mobile-bottom-nav />

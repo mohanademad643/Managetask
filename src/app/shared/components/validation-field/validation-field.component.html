@@ -1,0 +1,84 @@
+@if (label().value) {
+  <label [for]="label().for" class="form-label">
+    {{ label().value }}
+    @if (fieldControl().errors) {
+      <span class="text-[var(--color-error)] ml-0.5" aria-hidden="true">*</span>
+    }
+  </label>
+}
+
+<ng-content />
+
+@for (validator of validations(); track $index) {
+  @if (fieldControl().hasError(validator.name) && fieldControl().touched) {
+    <p class="form-error" role="alert" aria-live="polite">
+      <span class="shrink-0" aria-hidden="true">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-[14px] h-[14px]"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+          />
+        </svg>
+      </span>
+      {{ validator.msg }}
+    </p>
+  }
+}
+
+@if (patternRules().length > 0) {
+  <ul
+    class="flex flex-wrap gap-x-4 gap-y-1 mt-2 rounded-l px-4 py-3 list-none"
+    style="
+      background-color: #E8EDFF;
+  
+    "
+    aria-label="Password requirements"
+  >
+    @for (rule of patternRules(); track rule.errorKey) {
+      <li
+        class="flex items-center gap-2 py-[3px] text-[0.8rem] min-w-[180px] transition-colors duration-200"
+        [attr.aria-label]="
+          rule.label + ': ' + (isRuleMet(rule.errorKey) ? 'met' : 'not yet met')
+        "
+      >
+        <span
+          class="flex items-center justify-center w-[17px] h-[17px] rounded-full shrink-0 border-[1.5px] transition-all duration-200"
+          [style.border-color]="
+            isRuleMet(rule.errorKey)
+              ? 'var(--color-success)'
+              : 'var(--color-neutral-200)'
+          "
+          [style.background-color]="
+            isRuleMet(rule.errorKey) ? '#dcfce7' : 'transparent'
+          "
+          aria-hidden="true"
+        >
+          @if (isRuleMet(rule.errorKey)) {
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+              <path
+                d="M1.5 4.5l2 2L7.5 2"
+                stroke="var(--color-success)"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          }
+        </span>
+        <span
+
+        >
+          {{ rule.label }}
+        </span>
+      </li>
+    }
+  </ul>
+}
