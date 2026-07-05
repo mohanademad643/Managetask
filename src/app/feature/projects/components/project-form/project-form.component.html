@@ -1,0 +1,253 @@
+<nav class="flex items-center gap-2 mb-4" aria-label="Breadcrumb">
+  <a
+    routerLink="/projects"
+    class="text-label-sm text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors"
+  >
+    PROJECTS
+  </a>
+
+  @if (isEdit()) {
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-3 h-3 text-[var(--color-neutral-200)]"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2.5"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m8.25 4.5 7.5 7.5-7.5 7.5"
+      />
+    </svg>
+    <span class="text-label-sm text-[var(--color-text-secondary)]"
+      >PROJECT TITLE</span
+    >
+  }
+
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    class="w-3 h-3 text-[var(--color-neutral-200)]"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke-width="2.5"
+    stroke="currentColor"
+    aria-hidden="true"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="m8.25 4.5 7.5 7.5-7.5 7.5"
+    />
+  </svg>
+  <span class="text-label-sm text-[var(--color-primary-container)]">
+    {{ isEdit() ? "EDIT" : "ADD NEW PROJECT" }}
+  </span>
+</nav>
+
+<h1
+  class="text-[2rem] font-bold leading-tight text-[var(--color-text-body)] mb-10"
+>
+  {{ isEdit() ? "Edit Project" : "Add New Project" }}
+</h1>
+
+<div class="w-[672px] mx-auto  rounded-[10px] bg-[var(--color-surface)] shadow-[var(--shadow-sm)] overflow-hidden">
+  <div class="px-10 pt-10 pb-8">
+     <div class="flex items-center gap-4 mb-6">
+    <div
+      class="w-12 h-12 rounded-xl bg-[var(--color-surface-highest)] flex items-center justify-center shrink-0"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-6 h-6 text-[var(--color-primary-container)]"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5
+                 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5
+                 4.5 0 0 0-3.09 3.09Z"
+        />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375
+                 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375
+                 3.375 0 0 0-2.456 2.456Z"
+        />
+      </svg>
+    </div>
+    <div>
+      <h2 class="text-title-md font-semibold text-[var(--color-text-body)]">
+        {{ isEdit() ? "Edit Project" : "Initialize New Project" }}
+      </h2>
+      <p class="text-body-md text-[var(--color-text-secondary)]">
+        Define the scope and foundational details of your project.
+      </p>
+    </div>
+  </div>
+
+  <hr class="border-[var(--color-surface-2)] mb-8" />
+
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    novalidate
+    class="flex flex-col gap-1"
+    [attr.aria-label]="isEdit() ? 'Edit project form' : 'Add new project form'"
+  >
+    <app-validation-field
+      [fieldControl]="form.controls['name']"
+      [label]="{ value: 'Project Title', for: 'name' }"
+      [validations]="[
+        { name: 'required', msg: 'Project name is required.' },
+        {
+          name: 'minlength',
+          msg: 'Project name must be at least 3 characters.',
+        },
+        {
+          name: 'maxlength',
+          msg: 'Project name cannot exceed 100 characters.',
+        },
+      ]"
+    >
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        autocomplete="off"
+        placeholder="Enter project title"
+        class="form-input"
+        [class.error]="
+          form.controls['name'].invalid && form.controls['name'].touched
+        "
+      />
+    </app-validation-field>
+
+    <div class="mt-5">
+      <div class="flex items-center justify-between mb-2">
+        <label
+          for="description"
+          class="text-[0.6875rem] font-bold tracking-[0.1em] uppercase text-[var(--color-text-body)]"
+        >
+          Description
+        </label>
+        <span class="text-body-md text-[var(--color-neutral-200)]"
+          >Optional</span
+        >
+      </div>
+<app-validation-field
+      [fieldControl]="form.controls['description']"
+      [label]="{ value: 'Project Description', for: 'description' }"
+      [validations]="[
+        {
+          name: 'maxlength',
+          msg: 'Project description cannot exceed 500 characters.',
+        },
+      ]"
+    >
+      <textarea
+        id="description"
+        formControlName="description"
+        rows="6"
+        placeholder="Enter your project description here..."
+        class="form-input resize-none leading-relaxed"
+        [class.error]="
+          form.controls['description'].invalid &&
+          form.controls['description'].touched
+        "
+        aria-describedby="desc-counter"
+      ></textarea>
+      </app-validation-field>
+      <p
+        id="desc-counter"
+        class="text-right text-body-md text-[var(--color-text-secondary)] mt-1"
+      >
+        {{ descLength() }} / {{ MaxChar() }} characters
+      </p>
+    </div>
+
+    @if (apiError()) {
+      <div role="alert" aria-live="assertive" class="alert-error mt-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-4 h-4 shrink-0"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+          />
+        </svg>
+        {{ apiError() }}
+      </div>
+    }
+
+    <div class="flex items-center justify-between mt-8">
+      <a
+        routerLink="/projects"
+        class="font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-text-body)] transition-colors"
+      >
+        Back
+      </a>
+
+      <button
+        type="submit"
+        [disabled]="form.invalid || loading()"
+        class="btn btn-primary w-auto px-8"
+        [attr.aria-label]="isEdit() ? 'Save changes' : 'Create project'"
+      >
+        @if (loading()) {
+          <span
+            class="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin"
+            aria-hidden="true"
+          ></span>
+          {{ isEdit() ? "Saving…" : "Creating…" }}
+        } @else {
+          {{ isEdit() ? "Save Changes" : "Create Project" }}
+        }
+      </button>
+    </div>
+  </form>
+
+  </div>
+ 
+  <div
+    class="flex items-start gap-1 px-1 py-3 mt-3 bg-[#F1F3FF] "
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="w-5 h-5 shrink-0 mt-[1px] text-[var(--color-primary-container)]"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75
+               7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823
+               1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"
+      />
+    </svg>
+    <p class="text-body-md text-[var(--color-text-secondary)]">
+      <span class="font-bold text-[var(--color-text-body)]">Pro Tip:</span>
+      You can invite project members and assign epics immediately after the
+      initial creation process.
+    </p>
+  </div>
+</div>

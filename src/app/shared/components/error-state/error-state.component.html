@@ -1,0 +1,29 @@
+<div class="flex flex-col items-center justify-center h-[500px] text-center">
+  <div class="w-[72px] h-[72px] rounded-2xl flex items-center justify-center mb-6 bg-[#fef2f2]">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[var(--color-error)]" fill="none"
+         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round"
+            d="M2.25 15a4.5 4.5 0 0 0 4.5 4.5H18a3.75 3.75 0 0 0 1.332-7.257
+               3 3 0 0 0-3.758-3.848 5.25 5.25 0 0 0-10.233 2.33A4.502
+               4.502 0 0 0 2.25 15Z" />
+      <path stroke-linecap="round" stroke-linejoin="round"
+            d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5" />
+    </svg>
+  </div>
+
+  <h2 class="text-title-md font-bold mb-2 text-[var(--color-text-body)]">
+    {{ title() }}
+  </h2>
+  <p class="text-body-md max-w-xs text-[var(--color-text-secondary)]">
+    {{ description() }}
+  </p>
+
+  <button
+    type="button"
+    (click)="retry.emit()"
+    class="btn btn-primary mt-8 w-auto px-8 radius-none"
+  >
+    {{ retryLabel() }}
+  </button>
+
+</div>

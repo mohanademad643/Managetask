@@ -1,0 +1,44 @@
+<div class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 w-full max-w-sm px-6 sm:px-0 pointer-events-none">
+  @for (toast of toasts(); track toast.id) {
+    <div
+      class="pointer-events-auto flex items-start gap-3 rounded-xl border-l-4  shadow-[var(--shadow-md)] p-5"
+      [class]="accentClass(toast.type)"
+      role="alert"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-5 h-5 shrink-0 mt-0.5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="iconPath(toast.type)" />
+      </svg>
+
+      <p class="flex-1 text-body-md text-[var(--color-surface)]">
+        {{ toast.message }}
+      </p>
+
+      <button
+        type="button"
+        (click)="dismiss(toast.id)"
+        class="shrink-0 text-[var(--color-text-surface)] hover:text-[var(--color-text-body)] transition-colors"
+        aria-label="Dismiss notification"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-4 h-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  }
+</div>

@@ -1,0 +1,60 @@
+<div class="flex items-center justify-between pt-20 "
+     >
+
+  <p class="text-body-md text-[var(--color-text-secondary)]">
+    Showing {{ showingFrom() }}–{{ showingTo() }} of {{ totalItems() }} active projects
+  </p>
+
+  <nav aria-label="Pagination" class="flex items-center gap-1">
+
+    <button
+      type="button"
+      (click)="prev()"
+      [disabled]="currentPage() === 1"
+      class="w-8 h-8 flex items-center justify-center rounded-md
+             transition-colors disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed
+             text-[var(--color-text-secondary)]"
+      aria-label="Previous page"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+           viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+      </svg>
+    </button>
+
+    @for (page of pages(); track $index) {
+      @if (page === null) {
+        <span class="w-8 h-8 flex items-center justify-center text-body-md text-[var(--color-text-secondary)]">…</span>
+      } @else {
+        <button
+          type="button"
+          (click)="goTo(page)"
+          class="w-8 h-8 flex items-center cursor-pointer justify-center rounded-md text-body-md font-medium transition-colors"
+          [class]="page === currentPage()
+            ? 'bg-[var(--color-primary-container)] text-white'
+            : 'bg-transparent text-[var(--color-text-secondary)]'"
+          [attr.aria-label]="'Page ' + page"
+          [attr.aria-current]="page === currentPage() ? 'page' : null"
+        >
+          {{ page }}
+        </button>
+      }
+    }
+
+    <button
+      type="button"
+      (click)="next()"
+      [disabled]="currentPage() === totalPages()"
+      class="w-8 h-8 flex items-center justify-center rounded-md
+             transition-colors disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed
+             text-[var(--color-text-secondary)]"
+      aria-label="Next page"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+           viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+      </svg>
+    </button>
+
+  </nav>
+</div>

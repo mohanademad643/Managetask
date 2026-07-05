@@ -1,0 +1,151 @@
+@if (state() === "error") {
+  <app-error-state (retry)="loadProjects()" />
+}
+ @if (state() === "empty") {
+    <app-empty-state />
+  }
+   @if (state() === "loading") {
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (item of [1,2,3,4,5,6]; track $index) {
+        <app-skeleton-card />
+      }
+    </div>
+  }
+ 
+@if (state() === "data" ) {
+
+  <div class="flex items-start justify-between mb-10">
+    <div>
+      <h1 class="text-[2rem] font-bold leading-tight text-[var(--color-text-body)]">
+        Projects
+      </h1>
+      <p class="mt-1 text-body-md text-[var(--color-text-secondary)]">
+        Manage and curate your projects
+      </p>
+    </div>
+
+    @if (state() === "data") {
+      <a
+        routerLink="/AddProject"
+        class="hidden sm:inline-flex btn btn-primary w-auto px-6 gap-2"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-4 h-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2.5"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 4.5v15m7.5-7.5h-15"
+          />
+        </svg>
+        Create New Project
+      </a>
+    }
+
+  </div>
+
+ 
+
+  @if (state() === "data") {
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Project cards -->
+      @for (project of pagedProjects(); track project.id) {
+        <a
+          [routerLink]="['/', project.id, 'edit']"
+          class="rounded-xl flex flex-col cursor-pointer p-4 transition-shadow duration-200 hover:shadow-md bg-[var(--color-surface)]"
+        >
+      
+          <div class="flex flex-col gap-3 flex-1 p-6">
+            <h2 class="text-[1.0625rem] font-bold leading-snug text-[var(--color-text-body)]">
+              {{ project.name }}
+            </h2>
+            <p class="font-semibold leading-relaxed line-clamp-3 text-[var(--color-text-secondary)]">
+              {{ project.description }}
+            </p>
+          </div>
+
+          <!-- Card footer -->
+          <div class="flex items-center justify-between px-6 py-4 border-t border-[var(--color-surface-2)]">
+            <span class="text-[0.7rem] font-bold uppercase text-[var(--color-text-secondary)]">
+              Created at
+            </span>
+            <span class="font-semibold text-[var(--color-text-secondary)]">
+              {{ project.created_at | date: "d MMM yyyy" }}
+            </span>
+          </div>
+        </a>
+      }
+      @if (pagedProjects().length < PageSize()) {
+        <button
+          type="button"
+       
+          routerLink="/AddProject"
+          class="rounded-xl flex flex-col items-center justify-center gap-3 min-h-[200px] cursor-pointer transition-colors duration-200 group bg-[var(--color-surface)] hover:shadow-md"
+          aria-label="Add new project"
+        >
+          <span class="w-12 h-12 flex items-center justify-center transition-colors duration-200 rounded-[5px] bg-[var(--color-surface-highest)]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-8"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+          </span>
+          <span class="text-[.8rem] tracking-[0.12em] uppercase font-extrabold text-[var(--color-text-secondary)]">
+            Add Project
+          </span>
+        </button>
+      }
+    </div>
+
+    @if (totalPages() > 1) {
+      <div class="mt-10">
+        <app-pagination
+          [currentPage]="currentPage()"
+          [totalPages]="totalPages()"
+          [totalItems]="projects().length"
+          [pageSize]="6"
+          (pageChange)="onPageChange($event)"
+        />
+      </div>
+    }
+
+    <a
+      routerLink="/AddProject"
+      class="sm:hidden fixed bottom-30 right-6 z-50 w-14 h-14 rounded-[5px]
+             flex items-center justify-center shadow-lg
+             bg-[var(--color-primary-container)] text-white"
+      aria-label="Create new project"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-6 h-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2.5"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 4.5v15m7.5-7.5h-15"
+        />
+      </svg>
+    </a>
+  }
+}

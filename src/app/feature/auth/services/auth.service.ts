@@ -19,7 +19,7 @@ const TOKEN_KEY = 'Task_auth_token' as const;
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = environment.apiUrl;
+  private readonly baseUrl = `${environment.apiUrl}/auth/v1`;
   private readonly _session = signal<AuthSession | null>(this.$readSession());
    private _refresh$: Observable<string> | null = null;
   readonly session = computed(() => this._session());
@@ -157,6 +157,21 @@ export class AuthService {
     }
   }
 
+  ForgetPassword(email: string): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/recover`, { email }).pipe(
+      catchError((err: HttpErrorResponse) =>
+        throwError(
+          () =>
+            err.error?.msg ??
+            err.error?.error_description ??
+            'Something went wrong. Please try again.',
+        ),
+      ),
+    );
+  }
+  ResetPassword(password:string){
+     return this.http.put<void>(`${this.baseUrl}/user`, { password });
+  }
   CustomValidators(regex: RegExp, error: ValidationErrors): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       if (!control.value) return null;

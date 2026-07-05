@@ -24,6 +24,7 @@ export const routes: Routes = [
           ),
         title: 'Create Account',
       },
+    
       { path: '', redirectTo: 'login', pathMatch: 'full' },
     ],
   },
@@ -33,15 +34,12 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'projects',
-        loadComponent: () =>
-          import('./feature/projects/projects.component').then(
-            (m) => m.ProjectsComponent,
+        path: '',
+        loadChildren: () =>
+          import('./feature/projects/project.routes').then(
+            (m) => m.ProjectRoutes,
           ),
-        title: 'Projects',
       },
-
-      { path: '', redirectTo: 'projects', pathMatch: 'full' },
     ],
   },
 
