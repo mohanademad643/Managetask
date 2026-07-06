@@ -2,7 +2,7 @@
   <app-error-state (retry)="loadProjects()" />
 }
  @if (state() === "empty") {
-    <app-empty-state />
+    <app-empty-state (create)="navigateToCreate()" />
   }
    @if (state() === "loading") {
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -26,7 +26,7 @@
 
     @if (state() === "data") {
       <a
-        routerLink="/AddProject"
+        routerLink="/projects/create"
         class="hidden sm:inline-flex btn btn-primary w-auto px-6 gap-2"
       >
         <svg
@@ -57,15 +57,15 @@
       <!-- Project cards -->
       @for (project of pagedProjects(); track project.id) {
         <a
-          [routerLink]="['/', project.id, 'edit']"
+         
           class="rounded-xl flex flex-col cursor-pointer p-4 transition-shadow duration-200 hover:shadow-md bg-[var(--color-surface)]"
         >
       
-          <div class="flex flex-col gap-3 flex-1 p-6">
-            <h2 class="text-[1.0625rem] font-bold leading-snug text-[var(--color-text-body)]">
+          <div class="flex flex-col gap-3 flex-1 p-6"  >
+            <h2 class="text-[1.0625rem] font-bold leading-snug text-[var(--color-text-body)]" [routerLink]="['/', project.id, 'members']">
               {{ project.name }}
             </h2>
-            <p class="font-semibold leading-relaxed line-clamp-3 text-[var(--color-text-secondary)]">
+            <p class="font-semibold leading-relaxed line-clamp-3 text-[var(--color-text-secondary)]"  [routerLink]="['/', project.id, 'edit']">
               {{ project.description }}
             </p>
           </div>
@@ -85,7 +85,7 @@
         <button
           type="button"
        
-          routerLink="/AddProject"
+          routerLink="/projects/create"
           class="rounded-xl flex flex-col items-center justify-center gap-3 min-h-[200px] cursor-pointer transition-colors duration-200 group bg-[var(--color-surface)] hover:shadow-md"
           aria-label="Add new project"
         >
@@ -125,7 +125,7 @@
     }
 
     <a
-      routerLink="/AddProject"
+      routerLink="/projects/create"
       class="sm:hidden fixed bottom-30 right-6 z-50 w-14 h-14 rounded-[5px]
              flex items-center justify-center shadow-lg
              bg-[var(--color-primary-container)] text-white"

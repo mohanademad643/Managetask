@@ -5,11 +5,10 @@
   <img src="../../../../assets/empty.png" alt="empty_state"class="mt-6 w-[288px] h-[288px]" />
 
   <h2 class="text-[1.75rem] font-bold mt-5 mb-3 text-[var(--color-text-body)]">
-    No Projects
+   {{title()}}
   </h2>
   <p class=" max-w-sm leading-relaxed font-semibold text-[var(--color-text-secondary)]">
-    You don't have any projects yet. Start by defining your first architectural workspace
-    to begin tracking tasks and epics.
+    {{description()}}
   </p>
 
   <button type="button" (click)="create.emit()"
@@ -19,7 +18,7 @@
       <path stroke-linecap="round" stroke-linejoin="round"
             d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
     </svg>
-    Create New Project
+   {{createLabel()}}
   </button>
 
 </div>

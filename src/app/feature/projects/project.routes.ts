@@ -11,7 +11,7 @@ export const ProjectRoutes: Routes = [
         title: 'Projects',
       },
       {
-        path: 'AddProject',
+        path: 'projects/create',
         loadComponent: () =>
           import('./components/project-form/project-form.component').then(
             (m) => m.ProjectFormComponent,
@@ -25,8 +25,17 @@ export const ProjectRoutes: Routes = [
           import('./components/project-form/project-form.component').then(
             (m) => m.ProjectFormComponent,
           ),
+            
         title: 'Edit Project',
         data: { mode: 'edit' },
       },
+      {
+    path: ':id/members',
+    loadComponent: () =>
+      import('./components/project-members/project-members.component').then(
+        m => m.ProjectMembersComponent,
+      ),
+    title: 'Project Members',
+  },
       {path: '', redirectTo: 'projects', pathMatch: 'full'},
 ];
