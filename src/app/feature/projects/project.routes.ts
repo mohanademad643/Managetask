@@ -2,8 +2,11 @@ import { Routes } from '@angular/router';
 
 
 export const ProjectRoutes: Routes = [
-    {
-        path: 'projects',
+  {
+    path: 'project',
+    children: [
+      {
+        path: '',
         loadComponent: () =>
           import('./components/projects-list/projects-list.component').then(
             (m) => m.ProjectsListComponent,
@@ -11,7 +14,7 @@ export const ProjectRoutes: Routes = [
         title: 'Projects',
       },
       {
-        path: 'projects/create',
+        path: 'add',
         loadComponent: () =>
           import('./components/project-form/project-form.component').then(
             (m) => m.ProjectFormComponent,
@@ -20,22 +23,43 @@ export const ProjectRoutes: Routes = [
         data: { mode: 'create' },
       },
       {
-        path: ':id/edit',
-        loadComponent: () =>
-          import('./components/project-form/project-form.component').then(
-            (m) => m.ProjectFormComponent,
-          ),
-            
-        title: 'Edit Project',
-        data: { mode: 'edit' },
+        path: ':id',
+        children: [
+          {
+            path: 'epics',
+            loadComponent: () =>
+              import('./components/project-epics/project-epics.component').then(
+                (m) => m.ProjectEpicsComponent,
+              ),
+
+            title: 'Edit Project',
+            data: { mode: 'edit' },
+          },
+          {
+            path: 'edit',
+            loadComponent: () =>
+              import('./components/project-form/project-form.component').then(
+                (m) => m.ProjectFormComponent,
+              ),
+
+            title: 'Edit Project',
+            data: { mode: 'edit' },
+          },
+          {
+            path: 'members',
+            loadComponent: () =>
+              import('./components/project-members/project-members.component').then(
+                m => m.ProjectMembersComponent,
+              ),
+            title: 'Project Members',
+          },
+        ]
       },
-      {
-    path: ':id/members',
-    loadComponent: () =>
-      import('./components/project-members/project-members.component').then(
-        m => m.ProjectMembersComponent,
-      ),
-    title: 'Project Members',
+    ],
+
+
+
   },
-      {path: '', redirectTo: 'projects', pathMatch: 'full'},
+
+  { path: '', redirectTo: 'project', pathMatch: 'full' },
 ];

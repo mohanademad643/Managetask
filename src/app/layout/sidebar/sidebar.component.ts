@@ -11,14 +11,15 @@ export interface NavItem {
   label: string;
   route: string;
   icon: 'projects' | 'epics' | 'tasks' | 'members' | 'details';
+  requiresProject?: boolean;
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'Projects', route: 'projects', icon: 'projects' },
-  { label: 'Project Epics', route: 'epics', icon: 'epics' },
-  { label: 'Project Tasks', route: 'tasks', icon: 'tasks' },
-  { label: 'Project Members', route: 'members', icon: 'members' },
-  { label: 'Project Details', route: 'details', icon: 'details' },
+  { label: 'Projects', route: 'project', icon: 'projects' },
+  { label: 'Project Epics', route: 'epics', icon: 'epics', requiresProject: true },
+  { label: 'Project Tasks', route: 'tasks', icon: 'tasks', requiresProject: true },
+  { label: 'Project Members', route: 'members', icon: 'members', requiresProject: true },
+  { label: 'Project Details', route: 'edit', icon: 'details', requiresProject: true },
 ];
 
 @Component({
@@ -34,6 +35,6 @@ export class SidebarComponent {
   readonly collapseToggle = output<void>();
   readonly mobileClose = output<void>();
   readonly logoutClick = output<void>();
-
+ readonly projectId = input<string | null>(null);
   readonly navItems = NAV_ITEMS;
 }

@@ -3,12 +3,16 @@ import {
   ChangeDetectionStrategy,
   signal,
   inject,
+  DestroyRef,
 } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { MobileBottomNavComponent } from './mobile-bottom-nav/mobile-bottom-nav.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { AuthService } from '../feature/auth/services/auth.service';
+import { map, switchMap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+// import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-layout',
@@ -27,6 +31,27 @@ export class LayoutComponent {
   readonly mobileMenuOpen = signal(false);
   private readonly authServ = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
+  readonly projectId = signal<string | null>(null);
+  constructor() {
+    this.router.events
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        map(() => {
+          let child = this.route;
+          while (child.firstChild) {
+            child = child.firstChild;
+          }
+          return child;
+        }),
+        switchMap((child) => child.paramMap),
+      )
+      .subscribe((paramMap) => {
+        this.projectId.set(paramMap.get('id'));
+      });
+  }
+
 
   toggleCollapse(): void {
     this.sidebarCollapsed.update((v) => !v);

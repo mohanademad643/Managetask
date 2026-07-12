@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NAV_ITEMS } from '../sidebar/sidebar.component';
 
@@ -10,5 +10,6 @@ import { NAV_ITEMS } from '../sidebar/sidebar.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MobileBottomNavComponent {
+    readonly projectId = input<string | null>(null);
   readonly navItems = NAV_ITEMS;
 }

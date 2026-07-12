@@ -4,7 +4,8 @@
 >
   @for (item of navItems; track item.route) {
     <a
-      [routerLink]="item.route"
+      [routerLink]="item.requiresProject ? ['/project', projectId(), item.route] : [item.route]"
+        [hidden]="item.requiresProject && !projectId()"
       routerLinkActive="text-[var(--color-primary-container)]"
       [routerLinkActiveOptions]="{ exact: false }"
       class="flex flex-col items-center justify-center gap-[3px] min-w-0 flex-1 py-1 px-1 text-[var(--color-neutral-600)] text-[0.6rem] font-semibold tracking-[0.04em] uppercase transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-[var(--color-primary-container)] rounded-lg"

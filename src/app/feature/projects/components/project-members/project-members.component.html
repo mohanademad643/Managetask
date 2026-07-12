@@ -14,7 +14,7 @@
   createLabel="Invite Member"/>
   />
 }
-@if (state() !== "error") {
+@if (state() === "data") {
   <nav class="flex items-end gap-2 mb-1" aria-label="Breadcrumb">
     <a
       routerLink="/projects"
@@ -39,16 +39,12 @@
       />
     </svg>
 
-    @if (state() === "loading") {
-      <div class="h-3 w-28 rounded-md skeleton"></div>
-    } @else {
       <a
         [routerLink]="['/', projectId(), 'edit']"
         class="uppercase text-label-sm text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] transition-colors"
       >
         {{ projectName() }}
       </a>
-    }
 
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -79,9 +75,6 @@
       Project Members
     </h1>
 
-    @if (state() === "loading") {
-      <div class="h-11 w-40 rounded-lg skeleton"></div>
-    } @else {
       <button
         type="button"
         class="hidden sm:inline-flex btn btn-primary w-auto px-6 gap-2"
@@ -106,11 +99,9 @@
         </svg>
         Invite Member
       </button>
-    }
+    
   </div>
 
-  <!-- Members table -->
-  @if (state() === "loading" || state() === "data") {
     <div
       class="rounded-[8px] overflow-hidden mx-auto shadow-[var(--shadow-sm)] w-[880px] h-[417px] overflow-y-auto max-w-full mt-[5rem]"
     >
@@ -136,7 +127,7 @@
             </tr>
           </thead>
           <tbody class="bg-[var(--color-surface)]">
-            @if (state() === "data") {
+          
               @for (member of members(); track member.id; let i = $index) {
                 <tr class="border-t border-[var(--color-surface-2)]">
                   <td class="px-6 py-4">
@@ -198,7 +189,7 @@
                   </td>
                 </tr>
               }
-            }
+            
           </tbody>
         </table>
       </div>
@@ -228,4 +219,4 @@
       </svg>
     </a>
   }
-}
+

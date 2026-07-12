@@ -77,6 +77,6 @@ export class ProjectsListComponent implements OnInit {
   }
 
   navigateToCreate(): void {
-    this.router.navigateByUrl('/projects/create');
+    this.router.navigateByUrl('/project/add');
   }
 }

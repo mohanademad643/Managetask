@@ -51,9 +51,10 @@
   <nav class="flex-1 overflow-y-auto py-3" aria-label="Sidebar navigation">
     <ul class="flex flex-col gap-0.5 px-2" role="list">
       @for (item of navItems; track item.route) {
+           @if (!item.requiresProject || projectId()) {
         <li role="listitem">
           <a
-            [routerLink]="item.route"
+            [routerLink]="item.requiresProject ? ['/project', projectId(), item.route] : [item.route]"
             routerLinkActive="bg-[var(--color-surface)] text-[var(--color-primary-container)] font-semibold"
             [routerLinkActiveOptions]="{ exact: true }"
             (click)="mobileClose.emit()"
@@ -166,6 +167,7 @@
 </span>
           </a>
         </li>
+      }
       }
     </ul>
   </nav>
