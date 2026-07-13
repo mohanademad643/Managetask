@@ -5,7 +5,9 @@ export const supabaseInterceptor: HttpInterceptorFn = (req, next) => {
   const apiReq = req.clone({
     setHeaders: {
       apikey: environment.supabasepublicKey,
-      Authorization: `Bearer ${environment.supabasepublicKey}`,
+      ...(req.headers.has('Authorization')
+        ? {}
+        : { Authorization: `Bearer ${environment.supabasepublicKey}` }),
       'Content-Type': 'application/json',
     },
   });

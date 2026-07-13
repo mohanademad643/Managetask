@@ -7,7 +7,7 @@
 }
 
 <aside
-  class="flex flex-col shrink-0 bg-[var(--color-surface-low)] fixed top-0 left-0 z-30 h-screen w-[280px] transition-transform duration-300 ease-in-out md:static md:h-full md:z-auto md:translate-x-0 md:transition-[width] md:duration-300"
+  class="flex flex-col  shrink-0 bg-[var(--color-surface-low)] fixed top-0 left-0 z-30 h-screen border-b border-[#0000001A] w-[280px] transition-transform duration-300 ease-in-out md:static md:h-full md:z-auto md:translate-x-0 md:transition-[width] md:duration-300"
   [ngClass]="{
     '-translate-x-full': !mobileOpen(),
     'translate-x-0': mobileOpen(),
@@ -15,25 +15,10 @@
     'md:w-[80px]': collapsed(),
   }"
 >
-  <div class="flex items-center gap-2 h-[60px] px-5 shrink-0">
+  <div class="flex items-center gap-2 h-[64px] px-5 shrink-0">
     <div class="shrink-0">
-      <span class="text-[var(--color-primary-container)]" aria-hidden="true">
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
-          <path
-            d="M14 2L25.124 8.5V21.5L14 28L2.876 21.5V8.5L14 2Z"
-            fill="var(--color-primary-container)"
-            fill-opacity="0.12"
-            stroke="var(--color-primary-container)"
-            stroke-width="1.8"
-          />
-          <path
-            d="M9 14h10M14 9v10"
-            stroke="var(--color-primary-container)"
-            stroke-width="1.8"
-            stroke-linecap="round"
-          />
-        </svg>
-      </span>
+           <img src="../../../assets/logo.png" alt="Taskly Logo" class="h-[20px] w-[20px]" />
+    
     </div>
 
 <span

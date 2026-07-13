@@ -2,10 +2,12 @@ import { Routes } from '@angular/router';
 import { AuthComponent } from './feature/auth/auth.component';
 import { LayoutComponent } from './layout/layout.component';
 import { authGuard } from './core/guard/auth.guard';
+import { recoveryRedirectGuard } from './core/guard/recoveryRedirectGuard.guard';
 
 export const routes: Routes = [
   {
     path: 'auth',
+    //  canActivate: [recoveryRedirectGuard],
     component: AuthComponent,
     children: [
       {
@@ -24,13 +26,29 @@ export const routes: Routes = [
           ),
         title: 'Create Account',
       },
-    
+     {
+        path: 'forgot-password',
+        loadComponent: () =>
+          import('./feature/auth/components/forgot-password/forgot-password.component').then(
+            (m) => m.ForgotPasswordComponent,
+          ),
+        title: 'Forgot Password',
+      },
+      {
+        path: 'reset-password',
+        loadComponent: () =>
+          import('./feature/auth/components/reset-password/reset-password.component').then(
+            (m) => m.ResetPasswordComponent,
+          ),
+        title: 'Reset Password',
+      },
+
       { path: '', redirectTo: 'login', pathMatch: 'full' },
     ],
   },
   {
     path: '',
-    canActivate: [authGuard],
+    canActivate: [recoveryRedirectGuard,authGuard],
     component: LayoutComponent,
     children: [
       {

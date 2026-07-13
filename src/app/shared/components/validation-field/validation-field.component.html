@@ -1,9 +1,6 @@
 @if (label().value) {
   <label [for]="label().for" class="form-label">
     {{ label().value }}
-    @if (fieldControl().errors) {
-      <span class="text-[var(--color-error)] ml-0.5" aria-hidden="true">*</span>
-    }
   </label>
 }
 
