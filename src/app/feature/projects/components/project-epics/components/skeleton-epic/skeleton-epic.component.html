@@ -1,0 +1,43 @@
+<div aria-busy="true" aria-label="Loading epics" class="flex flex-col gap-5">
+
+  <div class="flex items-center gap-2">
+    <div class="skeleton h-3.5 w-14 rounded"></div>
+    <span class="text-[var(--color-neutral-200)]" aria-hidden="true">›</span>
+    <div class="skeleton h-3.5 w-24 rounded"></div>
+  </div>
+
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="skeleton h-9 w-64 rounded"></div>
+
+    <div class="flex items-center gap-3">
+      <div class="skeleton h-10 w-32 rounded"></div>
+      <div class="skeleton h-10 w-40 rounded"></div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+      <div class="min-h-[209px] bg-[var(--color-surface)] rounded-lg shadow-[0px_24px_24px_-12px_#041B3C0A] p-4" >
+
+        <div class="flex items-center justify-between mb-5">
+          <div class="skeleton h-5 w-20 rounded"></div>
+          <div class="skeleton h-8 w-8 rounded-[12px]"></div>
+        </div>
+
+        <div class="skeleton h-4 w-full rounded mb-6"></div>
+
+        <div class="flex items-center gap-3 mb-6">
+         <div class="skeleton h-8 w-8 rounded-[12px]"></div>
+          <div class="skeleton h-3.5 w-32 rounded"></div>
+        </div>
+
+               <div class="skeleton h-[6px] w-[100%] rounded"></div>
+        <div class=" pt-4 flex items-center justify-between">
+       
+          <div class="skeleton h-3 w-24 rounded"></div>
+          <div class="skeleton h-3 w-16 rounded"></div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

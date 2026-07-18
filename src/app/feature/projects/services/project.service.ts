@@ -2,17 +2,20 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { Project, ProjectMember, ProjectMemberResponse } from '../../../core/models/project.model';
+import { Epic, Project, ProjectMember, ProjectMemberResponse } from '../../../core/models/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/rest/v1`;
   readonly projects = signal<Project[]>([]);
+
+  readonly epics = signal<Epic[]>([]);
+
   findById(id: string): Project | undefined {
     return this.projects().find((p) => p.id === id);
   }
-    
+
   getProjects(): Observable<Project[]> {
     return this.http.get<Project[]>(`${this.baseUrl}/rpc/get_projects`).pipe(
       tap((data) => this.projects.set(data)),
@@ -62,7 +65,7 @@ export class ProjectService {
       .pipe(
         map((rows) =>
           rows.map((row) => ({
-            id: row.member_id,
+            id: row.user_id,
             name: row.metadata?.name ?? row.email,
             email: row.email,
             role: row.role,
@@ -71,4 +74,18 @@ export class ProjectService {
         ),
       );
   }
+
+  getEpics(projectId: string): Observable<Epic[]> {
+    return this.http
+      .get<Epic[]>(`${this.baseUrl}/project_epics?project_id=eq.${projectId}`)
+      .pipe(
+        tap((data) => this.epics.set(data)),
+        catchError((err) => {
+          const status = err?.status;
+          if (status === 401) return throwError(() => ({ type: 'unauthorized' }));
+          return throwError(() => ({ type: 'error' }));
+        }),
+      );
+  }
+
 }

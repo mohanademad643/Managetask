@@ -1,1 +1,173 @@
-<p>project-epics works!</p>
+<div class="mx-auto flex flex-col gap-10">
+
+  @if (state() === 'loading') {
+     <app-skeleton-epic></app-skeleton-epic>
+  } @else if (state() === 'error') {
+     <app-error-state
+      [description]="'Something went wrong while fetching this projects epics. Check your connection and try again.'"
+      (retry)="retry()"
+    ></app-error-state>
+
+  } @else if (state() === 'empty' || filteredEpics().length === 0) {
+    <app-epic-empty-state></app-epic-empty-state>
+  } @else {
+  <nav aria-label="Breadcrumb">
+    <ol class="flex items-center gap-2 text-label-sm text-[var(--color-text-secondary)]">
+      <li>
+        <a routerLink="/project" class="hover:text-[var(--color-primary-container)] transition-colors">
+          Projects
+        </a>
+      </li>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-3 h-3 text-[var(--color-neutral-200)]"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2.5"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m8.25 4.5 7.5 7.5-7.5 7.5"
+      />
+    </svg>
+      <li>
+        <a
+          [routerLink]="['/project', projectId(), 'edit']"
+          class="hover:text-[var(--color-primary-container)] transition-colors"
+        >
+          {{ project()?.name ?? 'Project name' }}
+        </a>
+      </li>
+   <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-3 h-3 text-[var(--color-neutral-200)]"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2.5"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m8.25 4.5 7.5 7.5-7.5 7.5"
+      />
+    </svg>
+      <li class="text-[var(--color-primary-container)]">Epics</li>
+    </ol>
+  </nav>
+
+  <!-- Header -->
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <h1 class="text-headline-lg text-[var(--color-text-body)]">Project Epics</h1>
+
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+      <div class="relative w-full sm:w-auto">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-neutral-600)] pointer-events-none"
+          fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+        </svg>
+        <input
+          type="search"
+          name="search"
+          placeholder="Search epics..."
+          class="form-input bg-[var(--color-surface-3)] pl-9 w-full sm:w-64"
+          [value]="searchTerm()"
+          (input)="onSearchChange($any($event.target).value)"
+          aria-label="Search epics"
+        />
+      </div>
+
+      <button type="button" class="hidden sm:inline-flex btn btn-primary !w-auto gap-2" routerLink="new">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        New Epic
+      </button>
+    </div>
+  </div>
+    <!-- Epics grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      @for (epic of filteredEpics(); track epic.id) {
+        <article class="relative flex flex-col justify-between w-full min-h-[209px] bg-[var(--color-surface)] rounded-lg p-4 border-l-4 border-l-[#004E32] shadow-[0px_1px_2px_0px_#0000000D]">
+
+          <div class="flex items-start justify-between mb-3">
+            <span class="text-label-sm rounded px-2 py-1 bg-[#82F9BE] text-[#005235]">
+              {{ epic.epic_id }}
+            </span>
+            <button
+              type="button"
+              class="text-[#041B3C33] cursor-pointer rounded"
+              [attr.aria-label]="'Actions for ' + epic.epic_id"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-8" viewBox="0 0 24 24">
+                <circle cx="12" cy="5" r="1.5" fill="currentColor" />
+                <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                <circle cx="12" cy="19" r="1.5" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
+
+          <h3 class=" font-[600] text-[var(--color-text-body)] mb-3 text-xl" >
+            {{ epic.title }}
+          </h3>
+
+          <div class="flex items-center gap-3 mb-6">
+            <span class="flex items-center justify-center w-[40px] h-[40px] rounded-[12px] bg-[#65DCA4] font-[700] shrink-0">
+              {{ initials(epic.assignee.name) }}
+            </span>
+            <div>
+              <p class="text-xs font-[500] text-[#434654] leading-tight">Assignee</p>
+              <p class="font-semibold text-[var(--color-text-body)] leading-tight">
+                {{ epic.assignee.name }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between border-t border-[#F1F3FF] pt-[16px] text-[11px] text-[var(--color-text-secondary)]">
+            <span class="flex items-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+              Created by:
+              <span class="font-[600] text-[var(--color-text-body)]">{{ epic.created_by.name }}</span>
+            </span>
+            <span class="flex items-center gap-1.5 text-[#434654CC] text-[11px] font-[400]">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+              </svg>
+              {{ epic.created_at | date }}
+            </span>
+          </div>
+        </article>
+      }
+    </div>
+    <a
+      routerLink="/projects/create"
+      class="sm:hidden fixed bottom-30 right-6 z-50 w-14 h-14 rounded-[5px] flex items-center justify-center shadow-lg bg-[var(--color-primary-container)] text-white"
+      aria-label="Create new project"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-6 h-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2.5"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 4.5v15m7.5-7.5h-15"
+        />
+      </svg>
+    </a>
+  }
+</div>

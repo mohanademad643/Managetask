@@ -33,3 +33,40 @@ export interface ProjectMember {
   role: MemberRole;
   department?: string;
 }
+
+export interface EpicUser {
+  sub: string;
+  name: string;
+  email: string;
+  department?: string;
+}
+ 
+export interface Epic {
+  id: string;
+  epic_id: string;
+  title: string;
+  description?: string;
+  deadline?: string;
+  created_at: string;
+  created_by: EpicUser;
+  assignee: EpicUser;
+}
+ 
+export interface Epic {
+  id: string;
+  epic_id: string;
+  title: string;
+  description?: string;
+  deadline?: string;
+  created_at: string;
+  created_by: EpicUser;
+  assignee: EpicUser;
+}
+
+export interface CreateEpicPayload {
+  title: string;
+  description?: string;
+  assignee_id?: string;
+  project_id: string;
+  deadline?: string;
+}
