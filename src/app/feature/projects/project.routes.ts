@@ -35,6 +35,14 @@ export const ProjectRoutes: Routes = [
             title: 'Edit Project',
             data: { mode: 'edit' },
           },
+           {
+            path: 'epics/new',
+            loadComponent: () =>
+              import('./components/project-epic-form/project-epic-form.component').then(
+                (m) => m.ProjectEpicFormComponent,
+              ),
+            title: 'Create Epic',
+          },
           {
             path: 'edit',
             loadComponent: () =>

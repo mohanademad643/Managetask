@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { Epic, Project, ProjectMember, ProjectMemberResponse } from '../../../core/models/project.model';
+import { CreateEpicPayload, Epic, Project, ProjectMember, ProjectMemberResponse } from '../../../core/models/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
@@ -87,5 +87,15 @@ export class ProjectService {
         }),
       );
   }
-
+  
+ createEpic(payload: CreateEpicPayload): Observable<Epic> {
+    return this.http.post<Epic>(`${this.baseUrl}/epics`, payload).pipe(
+      tap((epic) => this.epics.update((list) => [epic, ...list])),
+      catchError((err) => {
+        const status = err?.status;
+        if (status === 401) return throwError(() => ({ type: 'unauthorized' }));
+        return throwError(() => err.error?.msg  );
+      }),
+    );
+  }
 }

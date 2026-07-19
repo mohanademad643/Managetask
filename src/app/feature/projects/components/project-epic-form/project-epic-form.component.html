@@ -1,0 +1,268 @@
+<div class="flex flex-col items-center m-auto max-w-[59rem]">
+  <nav aria-label="Breadcrumb" class="w-full">
+    <ol
+      class="flex flex-wrap items-center gap-2 text-label-sm text-[#43465499]"
+    >
+      <li>
+        <a
+          routerLink="/project"
+          class="hover:text-[var(--color-primary-container)] transition-colors"
+        >
+          Projects
+        </a>
+      </li>
+      <li aria-hidden="true">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-3 h-3 text-[var(--color-neutral-200)]"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2.5"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m8.25 4.5 7.5 7.5-7.5 7.5"
+      />
+    </svg>
+</li>
+      <li>
+        <a
+          [routerLink]="['/project', projectId(), 'edit']"
+          class="hover:text-[var(--color-primary-container)] transition-colors"
+        >
+          {{ project()?.name ?? "Project" }}
+        </a>
+      </li>
+      <li aria-hidden="true">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-3 h-3 text-[var(--color-neutral-200)]"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2.5"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m8.25 4.5 7.5 7.5-7.5 7.5"
+      />
+    </svg>
+</li>
+      <li>
+        <a
+          [routerLink]="['/project', projectId(), 'epics']"
+          class="hover:text-[var(--color-primary-container)] transition-colors"
+        >
+          Epics
+        </a>
+      </li>
+      <li aria-hidden="true">›</li>
+      <li class="text-[var(--color-primary-container)]">New Epic</li>
+    </ol>
+  </nav>
+
+  <div class="mb-1 mt-1 w-full">
+    <h1 class="text-headline-lg text-[var(--color-text-body)]">
+      Create New Epic
+    </h1>
+    <p
+      class="text-[#434654] w-full max-w-[29rem] mb-8 font-normal tracking-[0px] text-start align-middle text-[16px] leading-[29.25px]"
+    >
+      Define a major project phase or high-level milestone to group related
+      tasks and track architectural progress.
+    </p>
+  </div>
+
+  <div
+    class="w-full bg-[var(--color-surface)] rounded-xl border border-[#C3C6D61A]/60 shadow-[0px_24px_48px_-12px_#041B3C0F] p-5 sm:p-8 md:p-10"
+  >
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="space-y-8 sm:space-y-10">
+        <!-- Title -->
+        <div
+          class="grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-4 items-start"
+        >
+          <label
+            for="epic-title"
+            class="text-label-sm text-[var(--color-text-body)] sm:pt-2.5"
+          >
+            Title <span class="text-[var(--color-error)]">*</span>
+          </label>
+          <app-validation-field
+            [fieldControl]="form.controls.title"
+            [validations]="[
+              {
+                name: 'required',
+                msg: 'Title is required (minimum 3 characters)',
+              },
+              {
+                name: 'minlength',
+                msg: 'Title is required (minimum 3 characters)',
+              },
+            ]"
+          >
+            <input
+              id="title"
+              type="text"
+              formControlName="title"
+              placeholder="Enter Your Epic Title"
+              class="form-input"
+            
+
+               [class.error]="
+          form.controls['title'].invalid &&
+          form.controls['title'].touched
+        "
+            />
+          </app-validation-field>
+        </div>
+
+        <!-- Description -->
+        <div
+          class="grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-4 items-start"
+        >
+          <div class="sm:pt-2.5">
+            <label
+              for="epic-description"
+              class="text-label-sm text-[var(--color-text-body)] block"
+            >
+              Description
+            </label>
+            <p
+              class="text-xs normal-case tracking-normal font-normal text-[var(--color-text-secondary)] mt-1"
+            >
+              Optional
+            </p>
+          </div>
+          <div>
+            <app-validation-field
+              [fieldControl]="form.controls.description"
+              [validations]="[
+                {
+                  name: 'maxlength',
+                  msg: 'Description must be 500 characters or fewer',
+                },
+              ]"
+            >
+              <textarea
+                id="epic-description"
+                rows="4"
+                formControlName="description"
+                placeholder="Enter Your Epic Description"
+                class="form-input resize-none"
+                [class.error]="
+                  form.controls.description.invalid &&
+                  form.controls.description.touched
+                "
+              ></textarea>
+            </app-validation-field>
+            <p
+              class="text-xs text-[var(--color-text-secondary)] text-right mt-1"
+            >
+              {{ descLength() }} / 500 characters
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+          <app-validation-field
+            [fieldControl]="form.controls.assigneeId"
+            [label]="{ value: 'Assignee', for: 'epic-assignee' }"
+          >
+            <div class="relative">
+              <select
+                id="epic-assignee"
+                formControlName="assigneeId"
+                class="form-input appearance-none pr-10 w-full"
+              >
+                <option value="">Select a member...</option>
+                @for (member of members(); track member.id) {
+                  <option [value]="member.id">{{ member.name }}</option>
+                }
+              </select>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-neutral-600)] pointer-events-none"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                />
+              </svg>
+            </div>
+          </app-validation-field>
+
+          <app-validation-field
+            [fieldControl]="form.controls.deadline"
+            [label]="{ value: 'Deadline', for: 'epic-deadline' }"
+            [validations]="[
+              {
+                name: 'pastDate',
+                msg: 'Deadline must be today or a future date',
+              },
+            ]"
+          >
+            <input
+              id="epic-deadline"
+              type="date"
+              [min]="today"
+              formControlName="deadline"
+              class="form-input w-full"
+              [class.error]="
+                form.controls.deadline.invalid && form.controls.deadline.touched
+              "
+            />
+          </app-validation-field>
+        </div>
+      </div>
+      @if (submitError()) {
+        <div class="alert-error" role="alert">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4 shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+            />
+          </svg>
+          Couldn't create the epic. Please check your connection and try again.
+        </div>
+      }
+      <!-- Footer -->
+      <div
+        class="border-t border-[#C3C6D61A] mt-8 sm:mt-10 pt-6 sm:pt-8 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-4 sm:gap-8"
+      >
+        <button
+          type="button"
+          (click)="cancel()"
+          class="text-sm font-semibold text-[var(--color-text-body)] hover:text-[var(--color-primary-container)] transition-colors cursor-pointer text-center sm:text-left"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary !w-full sm:!w-auto gap-2"
+          [disabled]="submitting()"
+        >
+          {{ submitting() ? "Creating..." : "Create Epic" }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
