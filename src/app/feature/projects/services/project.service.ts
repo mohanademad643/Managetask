@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { CreateEpicPayload, Epic, Project, ProjectMember, ProjectMemberResponse } from '../../../core/models/project.model';
+import { CreateEpicPayload, Epic, PagedResult, Project, ProjectMember, ProjectMemberResponse } from '../../../core/models/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
@@ -75,11 +75,19 @@ export class ProjectService {
       );
   }
 
-  getEpics(projectId: string): Observable<Epic[]> {
+   getEpics(projectId: string, limit: number, offset: number): Observable<PagedResult<Epic>> {
     return this.http
-      .get<Epic[]>(`${this.baseUrl}/project_epics?project_id=eq.${projectId}`)
+      .get<Epic[]>(`${this.baseUrl}/project_epics?project_id=eq.${projectId}&limit=${limit}&offset=${offset}`, {
+        headers: { Prefer: 'count=exact' },
+        observe: 'response',
+      })
       .pipe(
-        tap((data) => this.epics.set(data)),
+       map(({ body, headers }) => {
+          const items = body ?? [];
+          this.epics.set(items);
+          const total = Number(headers.get('content-range')?.split('/')[1]) || items.length;
+          return { items, total };
+        }),
         catchError((err) => {
           const status = err?.status;
           if (status === 401) return throwError(() => ({ type: 'unauthorized' }));
@@ -87,7 +95,7 @@ export class ProjectService {
         }),
       );
   }
-  
+
  createEpic(payload: CreateEpicPayload): Observable<Epic> {
     return this.http.post<Epic>(`${this.baseUrl}/epics`, payload).pipe(
       tap((epic) => this.epics.update((list) => [epic, ...list])),

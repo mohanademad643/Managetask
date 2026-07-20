@@ -148,6 +148,15 @@
         </article>
       }
     </div>
+
+    <app-pagination
+      [currentPage]="currentPage()"
+      [totalPages]="totalPages()"
+      [totalItems]="totalItems()"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)"
+    />
+
     <a
       routerLink="/projects/create"
       class="sm:hidden fixed bottom-30 right-6 z-50 w-14 h-14 rounded-[5px] flex items-center justify-center shadow-lg bg-[var(--color-primary-container)] text-white"

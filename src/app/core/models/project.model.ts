@@ -70,3 +70,9 @@ export interface CreateEpicPayload {
   project_id: string;
   deadline?: string;
 }
+
+export interface PagedResult<T> {
+  items: T[];
+  total: number;
+
+}

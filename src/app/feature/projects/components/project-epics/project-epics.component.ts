@@ -2,16 +2,17 @@ import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angula
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 import { Epic, ViewState } from '../../../../core/models/project.model';
-import { ErrorStateComponent } from "../../../../shared/components/error-state/error-state.component";
-import { SkeletonEpicComponent } from "./components/skeleton-epic/skeleton-epic.component";
-import { EpicEmptyStateComponent } from "./components/epic-empty-state/epic-empty-state.component";
+import { ErrorStateComponent } from '../../../../shared/components/error-state/error-state.component';
+import { SkeletonEpicComponent } from './components/skeleton-epic/skeleton-epic.component';
+import { EpicEmptyStateComponent } from './components/epic-empty-state/epic-empty-state.component';
+import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-project-epics',
   standalone: true,
-  imports: [RouterLink, DatePipe, ErrorStateComponent, SkeletonEpicComponent, EpicEmptyStateComponent],
+  imports: [RouterLink, DatePipe, ErrorStateComponent, SkeletonEpicComponent, EpicEmptyStateComponent, PaginationComponent],
   templateUrl: './project-epics.component.html',
 })
 export class ProjectEpicsComponent implements OnInit {
@@ -26,6 +27,12 @@ export class ProjectEpicsComponent implements OnInit {
   readonly epics = signal<Epic[]>([]);
   readonly state = signal<ViewState>('loading');
   readonly searchTerm = signal('');
+  readonly pageSize = 6;
+  readonly currentPage = signal(1);
+  readonly totalItems = signal(0);
+  readonly totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.totalItems() / this.pageSize)),
+  );
 
   readonly filteredEpics = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
@@ -48,28 +55,39 @@ export class ProjectEpicsComponent implements OnInit {
     }
 
     if (id) {
-      this.GetAllEpics(id);
+      this.GetAllEpics(id,1);
     } else {
       this.state.set('error');
     }
   }
 
-  GetAllEpics(projectId: string): void {
+  GetAllEpics(projectId: string, page: number): void {
     this.state.set('loading');
-    this.projectService.getEpics(projectId).pipe(takeUntilDestroyed(this.Destrouref)).subscribe({
-      next: (data) => {
-        this.epics.set(data);
-        this.state.set(data.length === 0 ? 'empty' : 'data');
-      },
-      error: () => {
-        this.state.set('error');
-      },
-    });
+    const offset = (page - 1) * this.pageSize;
+
+    this.projectService
+      .getEpics(projectId, this.pageSize, offset)
+      .pipe(takeUntilDestroyed(this.Destrouref))
+      .subscribe({
+        next: ({ items, total }) => {
+          this.epics.set(items);
+          this.currentPage.set(page);
+          this.totalItems.set(total);
+          this.state.set(total === 0 ? 'empty' : 'data');
+        },
+        error: () => this.state.set('error'),
+      });
+  }
+
+  onPageChange(page: number): void {
+    const id = this.projectId();
+    if (!id || page < 1) return;
+    this.GetAllEpics(id, page);
   }
 
   retry(): void {
     const id = this.projectId();
-    if (id) this.GetAllEpics(id);
+    if (id) this.GetAllEpics(id, this.currentPage());
   }
 
   onSearchChange(value: string): void {
@@ -85,6 +103,4 @@ export class ProjectEpicsComponent implements OnInit {
       .join('')
       .toUpperCase();
   }
-
-
 }
