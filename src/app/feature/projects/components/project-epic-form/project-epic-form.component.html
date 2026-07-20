@@ -82,7 +82,7 @@
     class="w-full bg-[var(--color-surface)] rounded-xl border border-[#C3C6D61A]/60 shadow-[0px_24px_48px_-12px_#041B3C0F] p-5 sm:p-8 md:p-10"
   >
     <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-      <div class="space-y-8 sm:space-y-10">
+      <div class="flex flex-col gap-8 sm:gap-10">
         <!-- Title -->
         <div
           class="grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-4 items-start"
@@ -226,7 +226,7 @@
         </div>
       </div>
       @if (submitError()) {
-        <div class="alert-error" role="alert">
+        <div class="alert-error mt-6" role="alert">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="w-4 h-4 shrink-0"

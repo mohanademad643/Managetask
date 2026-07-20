@@ -106,4 +106,17 @@ export class ProjectService {
       }),
     );
   }
+
+  getEpicById(projectId: string, epicId: string): Observable<Epic> {
+    return this.http
+      .get<Epic[]>(`${this.baseUrl}/project_epics?project_id=eq.${projectId}&id=eq.${epicId}`)
+      .pipe(
+        map((rows) => rows[0]),
+        catchError((err) => {
+          const status = err?.status;
+          if (status === 401) return throwError(() => ({ type: 'unauthorized' }));
+          return throwError(() => err.error?.msg  );
+        }),
+      );
+  }
 }

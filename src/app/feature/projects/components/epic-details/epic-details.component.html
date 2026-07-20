@@ -1,0 +1,250 @@
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center p-[32px] bg-[#041B3C33] backdrop-blur-[4px]"
+  tabindex="-1"
+  (click)="close()"
+  (keydown.escape)="close()"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-label]="epic() ? epic()!.title : 'Epic details'"
+>
+  <div
+    class="w-full max-w-[672px] max-h-[921px] h-[90vh] overflow-y-auto bg-[var(--color-surface)] rounded-lg shadow-[0px_25px_50px_-12px_#00000040] p-6"
+    tabindex="-1"
+    (click)="$event.stopPropagation()"
+    (keydown.escape)="close()"
+  >
+    @if (loading()) {
+      <!-- Loading skeleton -->
+      <div class="animate-pulse space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="h-4 w-20 rounded bg-[var(--color-surface-3)]"></div>
+          <div class="h-4 w-4 rounded bg-[var(--color-surface-3)]"></div>
+        </div>
+        <div class="h-11 w-full rounded-lg bg-[var(--color-surface-3)]"></div>
+        <div class="h-24 w-full rounded-lg bg-[var(--color-surface-3)]"></div>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="h-10 rounded bg-[var(--color-surface-3)]"></div>
+          <div class="h-10 rounded bg-[var(--color-surface-3)]"></div>
+          <div class="h-10 rounded bg-[var(--color-surface-3)]"></div>
+        </div>
+      </div>
+    } @else if (hasError() || !epic()) {
+      <!-- Error state -->
+      <div class="flex flex-col items-center text-center py-10">
+        <p class="text-body-md text-[var(--color-text-secondary)] mb-4">
+          Couldn't load this epic. Please try again.
+        </p>
+        <button type="button" class="btn btn-primary !w-auto" (click)="close()">
+          Close
+        </button>
+      </div>
+    } @else {
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4 text-[var(--color-primary-container)]"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <rect x="3" y="4" width="6" height="16" rx="1" />
+            <rect x="11" y="4" width="10" height="16" rx="1" opacity="0.4" />
+          </svg>
+          <span class="text-label-sm text-[var(--color-text-secondary)]">{{
+            epic()!.epic_id
+          }}</span>
+        </div>
+        <button
+          type="button"
+          class="text-[var(--color-neutral-600)] hover:text-[var(--color-text-body)] cursor-pointer"
+          (click)="close()"
+          aria-label="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.75"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18 18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Title -->
+      <div class="border border-[#D7E2FF] rounded-lg px-4 py-3 mb-15">
+        <input
+          type="text"
+          class="w-full bg-transparent outline-none text-[20px] leading-[32px] font-[700] text-[var(--color-text-body)]"
+          [value]="epic()!.title"
+        />
+      </div>
+
+      <!-- Description -->
+    <div class="border border-[#D7E2FF] rounded-lg px-4 py-3 min-h-[100px] mb-5">
+        <textarea
+          class="w-full min-h-[76px] bg-transparent outline-none resize-none text-[16px] leading-[26px] font-[400] text-[var(--color-neutral-900)] placeholder:italic"
+          placeholder="No description provided"
+          [value]="epic()!.description ?? ''"
+        ></textarea>
+      </div>  
+
+<div class="grid grid-cols-2 items-center md:grid-cols-3 gap-4 mb-5">
+  <div >
+    <p class="text-label-sm text-[#041B3C66] mb-2">Created By</p>
+    <div class="flex items-center gap-2">
+      <span
+        class="w-7 h-7 rounded-[12px] bg-[var(--color-primary-container)] text-white text-xs font-semibold flex items-center justify-center shrink-0"
+      >
+        {{ initials(epic()!.created_by!.name) }}
+      </span>
+      <span class="font-medium text-[var(--color-text-body)] truncate">{{
+        epic()!.created_by!.name
+      }}</span>
+    </div>
+  </div>
+
+  <div>
+    <p class="text-label-sm text-[#041B3C66] mb-2">Assignee</p>
+    <div class="relative">
+      <select
+        class="w-full appearance-none pr-10 border border-[#D7E2FF] rounded-lg px-3 py-1.5 bg-transparent outline-none font-semibold text-[var(--color-text-body)]"
+      >
+        @if (epic()!.assignee) {
+          <option [value]="epic()!.assignee.sub" selected>
+            {{ epic()!.assignee.name }}
+          </option>
+        } @else {
+          <option value="" selected>Unassigned</option>
+        }
+      </select>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-neutral-600)] pointer-events-none"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m19.5 8.25-7.5 7.5-7.5-7.5"
+        />
+      </svg>
+    </div>
+  </div>
+
+  <div>
+    <p class="text-label-sm text-[#041B3C66] mb-2">Deadline</p>
+    <input
+      type="date"
+      class="w-full border border-[#D7E2FF] rounded-lg px-3 py-1.5 bg-transparent outline-none font-semibold text-[var(--color-text-body)]"
+      [value]="epic()!.deadline"
+    />
+  </div>
+  <!-- Created At -->
+<div class="mb-6">
+  <p class="text-label-sm text-[#041B3C66] mb-2">Created At</p>
+  <span
+    class="flex items-center gap-1.5 font-semibold text-[var(--color-text-body)]"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-3.5 h-3.5 text-[var(--color-neutral-600)] shrink-0"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
+      />
+    </svg>
+    {{ epic()!.created_at | date }}
+  </span>
+</div>
+</div>
+
+
+      <!-- Tasks -->
+      <div class="flex items-center justify-between mt-1 mb-4">
+        <h3 class="text-title-md font-semibold text-[var(--color-text-body)]">
+          Tasks
+        </h3>
+        <button
+          type="button"
+          class="inline-flex items-center gap-1 text-body-md font-semibold text-[var(--color-primary-container)] hover:text-[var(--color-primary-hover)] cursor-pointer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2.5"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
+          Add Task
+        </button>
+      </div>
+
+      <!-- Tasks empty state -->
+      <div
+        class="flex flex-col items-center text-center py-10 px-6 border-[2px] border-dashed border-[#C3C6D64D] rounded-lg bg-[#F1F3FF]"
+      >
+        <span
+          class="w-10 h-10 rounded-lg bg-[#D7E2FF] flex items-center justify-center mb-3"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 text-[#041B3C4D]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.75"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+            />
+          </svg>
+        </span>
+        <p class="text-body-md text-[var(--color-text-body)] mb-4">
+          No tasks have been added to this epic yet
+        </p>
+        <button type="button" class="btn btn-primary !w-auto gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2.5"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
+          Add Task
+        </button>
+      </div>
+    }
+  </div>
+</div>

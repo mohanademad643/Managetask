@@ -95,7 +95,12 @@
     <!-- Epics grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       @for (epic of filteredEpics(); track epic.id) {
-        <article class="relative flex flex-col justify-between w-full min-h-[209px] bg-[var(--color-surface)] rounded-lg p-4 border-l-4 border-l-[#004E32] shadow-[0px_1px_2px_0px_#0000000D]">
+       <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
+        <article
+          (click)="openEpic(epic.id)"
+          tabindex="0"
+          role="button"
+         class="relative flex flex-col justify-between cursor-pointer w-full min-h-[209px] bg-[var(--color-surface)] rounded-lg p-4 border-l-4 border-l-[#004E32] shadow-[0px_1px_2px_0px_#0000000D]">
 
           <div class="flex items-start justify-between mb-3">
             <span class="text-label-sm rounded px-2 py-1 bg-[#82F9BE] text-[#005235]">
@@ -178,5 +183,12 @@
         />
       </svg>
     </a>
+  }
+   @if (selectedEpicId(); as epicId) {
+    <app-epic-details
+      [projectId]="projectId()!"
+      [epicId]="epicId"
+      (closed)="closeEpicModal()"
+    />
   }
 </div>

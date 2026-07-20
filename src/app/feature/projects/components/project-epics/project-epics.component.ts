@@ -8,11 +8,12 @@ import { EpicEmptyStateComponent } from './components/epic-empty-state/epic-empt
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
 import { DatePipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EpicDetailsComponent } from "../epic-details/epic-details.component";
 
 @Component({
   selector: 'app-project-epics',
   standalone: true,
-  imports: [RouterLink, DatePipe, ErrorStateComponent, SkeletonEpicComponent, EpicEmptyStateComponent, PaginationComponent],
+  imports: [RouterLink, DatePipe, ErrorStateComponent, SkeletonEpicComponent, EpicEmptyStateComponent, PaginationComponent, EpicDetailsComponent],
   templateUrl: './project-epics.component.html',
 })
 export class ProjectEpicsComponent implements OnInit {
@@ -20,6 +21,7 @@ export class ProjectEpicsComponent implements OnInit {
   private readonly Destrouref = inject(DestroyRef);
   private readonly projectService = inject(ProjectService);
   readonly projectId = signal<string | null>(null);
+      readonly selectedEpicId = signal<string | null>(null);
   readonly project = computed(() => {
     const id = this.projectId();
     return id ? this.projectService.findById(id) : undefined;
@@ -44,7 +46,12 @@ export class ProjectEpicsComponent implements OnInit {
         epic.description?.toLowerCase().includes(term),
     );
   });
-
+ openEpic(epicId: string): void {
+    this.selectedEpicId.set(epicId);
+  }
+  closeEpicModal(): void {
+    this.selectedEpicId.set(null);
+  }
   ngOnInit(): void {
 
     const id = this.route.snapshot.paramMap.get('id');
