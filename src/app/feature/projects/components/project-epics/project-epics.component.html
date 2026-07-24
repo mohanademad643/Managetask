@@ -125,12 +125,12 @@
 
           <div class="flex items-center gap-3 mb-6">
             <span class="flex items-center justify-center w-[40px] h-[40px] rounded-[12px] bg-[#65DCA4] font-[700] shrink-0">
-              {{ initials(epic.assignee.name) }}
+              {{ epic.assignee!.name ? initials(epic.assignee!.name) : '—' }}
             </span>
             <div>
               <p class="text-xs font-[500] text-[#434654] leading-tight">Assignee</p>
               <p class="font-semibold text-[var(--color-text-body)] leading-tight">
-                {{ epic.assignee.name }}
+                {{ epic.assignee?.name ?? 'Unassigned' }}
               </p>
             </div>
           </div>
@@ -163,7 +163,7 @@
     />
 
     <a
-      routerLink="/projects/create"
+      routerLink="new"
       class="sm:hidden fixed bottom-30 right-6 z-50 w-14 h-14 rounded-[5px] flex items-center justify-center shadow-lg bg-[var(--color-primary-container)] text-white"
       aria-label="Create new project"
     >
@@ -189,6 +189,7 @@
       [projectId]="projectId()!"
       [epicId]="epicId"
       (closed)="closeEpicModal()"
+      (updated)="EpicUpdated($event)"
     />
   }
 </div>

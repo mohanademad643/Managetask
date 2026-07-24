@@ -49,7 +49,7 @@ export interface Epic {
   deadline?: string;
   created_at: string;
   created_by: EpicUser;
-  assignee: EpicUser;
+  assignee?: EpicUser;
 }
  
 export interface Epic {
@@ -60,7 +60,7 @@ export interface Epic {
   deadline?: string;
   created_at: string;
   created_by: EpicUser;
-  assignee: EpicUser;
+  assignee?: EpicUser;
 }
 
 export interface CreateEpicPayload {
@@ -69,6 +69,12 @@ export interface CreateEpicPayload {
   assignee_id?: string;
   project_id: string;
   deadline?: string;
+}
+export interface UpdateEpicPayload {
+  title?: string;
+  description?: string;
+  assignee_id?: string | null;
+  deadline?: string | null;
 }
 
 export interface PagedResult<T> {

@@ -52,6 +52,10 @@ export class ProjectEpicsComponent implements OnInit {
   closeEpicModal(): void {
     this.selectedEpicId.set(null);
   }
+  EpicUpdated(epic: Epic): void {
+    this.epics.update((list) => list.map((e) => (e.id === epic.id ? epic : e)));
+  }
+
   ngOnInit(): void {
 
     const id = this.route.snapshot.paramMap.get('id');
@@ -101,7 +105,8 @@ export class ProjectEpicsComponent implements OnInit {
     this.searchTerm.set(value);
   }
 
-  initials(name: string): string {
+  initials(name?: string ): string {
+    if (!name) return '';
     return name
       .split(' ')
       .filter(Boolean)
