@@ -82,3 +82,35 @@ export interface PagedResult<T> {
   total: number;
 
 }
+export enum TaskStatus {
+  ToDo = 'TO_DO',
+  InProgress = 'IN_PROGRESS',
+  Blocked = 'BLOCKED',
+  InReview = 'IN_REVIEW',
+  ReadyForQa = 'READY_FOR_QA',
+  Reopened = 'REOPENED',
+  ReadyForProduction = 'READY_FOR_PRODUCTION',
+  Done = 'DONE',
+}
+
+export interface Task {
+  id: string;
+  project_id: string;
+  title: string;
+  status: TaskStatus;
+  epic_id?: string;
+  description?: string;
+  assignee_id?: string;
+  due_date?: string;
+  created_at: string;
+}
+
+export interface CreateTaskPayload {
+  project_id: string;
+  title: string;
+  status?: TaskStatus;
+  epic_id?: string;
+  description?: string;
+  assignee_id?: string;
+  due_date?: string;
+}

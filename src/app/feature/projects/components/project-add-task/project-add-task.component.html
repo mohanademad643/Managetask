@@ -1,0 +1,291 @@
+<div class="flex flex-col items-center m-auto max-w-[64rem]">
+  <nav aria-label="Breadcrumb" class="w-full">
+    <ol
+      class="flex flex-wrap items-center gap-2 text-label-sm text-[#43465499]"
+    >
+      <li>
+        <a
+          routerLink="/project"
+          class="hover:text-[var(--color-primary-container)] transition-colors"
+        >
+          Projects
+        </a>
+      </li>
+      <li aria-hidden="true">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-3 h-3 text-[var(--color-neutral-200)]"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2.5"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m8.25 4.5 7.5 7.5-7.5 7.5"
+      />
+    </svg>
+</li>
+      <li>
+        <a
+          [routerLink]="['/project', projectId(), 'edit']"
+          class="hover:text-[var(--color-primary-container)] transition-colors"
+        >
+          {{ project()?.name ?? "Project" }}
+        </a>
+      </li>
+      <li aria-hidden="true">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-3 h-3 text-[var(--color-neutral-200)]"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="2.5"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="m8.25 4.5 7.5 7.5-7.5 7.5"
+      />
+    </svg>
+</li>
+      <li>
+        <a
+          [routerLink]="['/project', projectId(), 'tasks']"
+          class="hover:text-[var(--color-primary-container)] transition-colors"
+        >
+          Tasks
+        </a>
+      </li>
+      <li aria-hidden="true">›</li>
+      <li class="text-[var(--color-primary-container)]">New Task</li>
+    </ol>
+  </nav>
+
+  <div class="mb-1 mt-1 w-full">
+    <h1 class="text-headline-lg text-[var(--color-text-body)]">
+      Create New Task
+    </h1>
+    <p
+      class="text-[#434654] w-full mb-8 font-normal tracking-[0px] text-start align-middle text-[16px] leading-[29.25px]"
+    >
+      Initialize a new work item within the Architectural Workspace
+      ecosystem.
+    </p>
+  </div>
+
+  <div
+    class="w-full bg-[var(--color-surface)] rounded-xl border border-[#C3C6D61A]/60 shadow-[0px_24px_48px_-12px_#041B3C0F] p-5 sm:p-8 md:p-10"
+  >
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="flex flex-col gap-6 sm:gap-8">
+        <!-- Title -->
+        <div>
+          <label for="task-title" class="form-label">
+            Title <span class="text-[var(--color-error)]">*</span>
+          </label>
+          <app-validation-field
+            [fieldControl]="form.controls.title"
+            [validations]="[
+              { name: 'required', msg: 'Title is required' },
+            ]"
+          >
+            <input
+              id="task-title"
+              type="text"
+              formControlName="title"
+              placeholder="e.g., Finalize structural schematics"
+              class="form-input"
+              [class.error]="
+                form.controls.title.invalid && form.controls.title.touched
+              "
+            />
+          </app-validation-field>
+        </div>
+
+        <!-- Status + Assignee -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+          <div>
+            <label for="task-status" class="form-label">
+              Status <span class="text-[var(--color-error)]">*</span>
+            </label>
+            <app-validation-field
+              [fieldControl]="form.controls.status"
+              [validations]="[
+                { name: 'required', msg: 'Status is required' },
+              ]"
+            >
+              <div class="relative">
+                <select
+                  id="task-status"
+                  formControlName="status"
+                  class="form-input appearance-none pr-10 w-full"
+                  [class.error]="
+                    form.controls.status.invalid &&
+                    form.controls.status.touched
+                  "
+                >
+                  @for (opt of statusOptions; track opt.value) {
+                    <option [value]="opt.value">{{ opt.label }}</option>
+                  }
+                </select>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-neutral-600)] pointer-events-none"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
+                </svg>
+              </div>
+            </app-validation-field>
+          </div>
+
+          <div>
+            <label for="task-assignee" class="form-label">Assignee</label>
+            <app-validation-field [fieldControl]="form.controls.assigneeId">
+              <div class="relative">
+                <select
+                  id="task-assignee"
+                  formControlName="assigneeId"
+                  class="form-input appearance-none pr-10 w-full"
+                >
+                  <option value="">Select Team Member</option>
+                  @for (member of members(); track member.id) {
+                    <option [value]="member.id">{{ member.name }}</option>
+                  }
+                </select>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-neutral-600)] pointer-events-none"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                  />
+                </svg>
+              </div>
+            </app-validation-field>
+          </div>
+        </div>
+
+        <!-- Epic -->
+        <div>
+          <label for="task-epic" class="form-label">Epic</label>
+          <app-validation-field [fieldControl]="form.controls.epicId">
+            <div class="relative">
+              <select
+                id="task-epic"
+                formControlName="epicId"
+                class="form-input appearance-none pr-10 w-full"
+              >
+                <option value="">Select Epic Link</option>
+                @for (epic of epics(); track epic.id) {
+                  <option [value]="epic.id">{{ epic.title.length > 100 ? epic.title.slice(0, 100) + '...' : (epic.id +"  " + epic.title) }}</option>
+                }
+              </select>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--color-neutral-600)] pointer-events-none"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                />
+              </svg>
+            </div>
+          </app-validation-field>
+        </div>
+
+        <!-- Due date -->
+        <div>
+          <label for="task-due-date" class="form-label">Due Date</label>
+          <app-validation-field [fieldControl]="form.controls.dueDate">
+            <input
+              id="task-due-date"
+              type="datetime-local"
+              formControlName="dueDate"
+              class="form-input w-full"
+            />
+          </app-validation-field>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label for="task-description" class="form-label">
+            Description
+          </label>
+          <app-validation-field [fieldControl]="form.controls.description">
+            <textarea
+              id="task-description"
+              rows="5"
+              formControlName="description"
+              placeholder="Provide detailed context for this task..."
+              class="form-input resize-none"
+            ></textarea>
+          </app-validation-field>
+        </div>
+      </div>
+
+      @if (submitError()) {
+        <div class="alert-error mt-6" role="alert">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4 shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+            />
+          </svg>
+          Couldn't create the task. Please check your connection and try again.
+        </div>
+      }
+
+      <!-- Footer -->
+      <div
+        class="border-t border-[#C3C6D61A] mt-8 sm:mt-10 pt-6 sm:pt-8 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-4 sm:gap-8"
+      >
+        <button
+          type="button"
+          (click)="cancel()"
+          class="text-sm font-semibold text-[var(--color-text-body)] hover:text-[var(--color-primary-container)] transition-colors cursor-pointer text-center sm:text-left"
+        >
+          Back
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary !w-full sm:!w-auto gap-2"
+          [disabled]="submitting()"
+        >
+          {{ submitting() ? "Creating..." : "Create Task" }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

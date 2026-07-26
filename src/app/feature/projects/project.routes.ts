@@ -43,6 +43,14 @@ export const ProjectRoutes: Routes = [
               ),
             title: 'Create Epic',
           },
+           {
+            path: 'tasks/new',
+            loadComponent: () =>
+              import('./components/project-add-task/project-add-task.component').then(
+                (m) => m.ProjectAddTaskComponent,
+              ),
+            title: 'Create Task',
+          },
           {
             path: 'edit',
             loadComponent: () =>

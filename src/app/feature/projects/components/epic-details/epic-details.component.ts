@@ -8,11 +8,12 @@ import { ValidationFieldComponent } from '../../../../shared/components/validati
 import { ToastService } from '../../../../shared/services/toster.service';
 import { SkeletonEpicDetailComponent } from "./components/skeleton-epic-detail/skeleton-epic-detail.component";
 import { ErrorStateComponent } from "../../../../shared/components/error-state/error-state.component";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-epic-details',
   standalone: true,
-  imports: [DatePipe, ReactiveFormsModule, ValidationFieldComponent, SkeletonEpicDetailComponent, ErrorStateComponent],
+  imports: [DatePipe, ReactiveFormsModule, ValidationFieldComponent, SkeletonEpicDetailComponent, ErrorStateComponent, RouterLink],
   templateUrl: './epic-details.component.html',
 })
 export class EpicDetailsComponent implements OnInit {

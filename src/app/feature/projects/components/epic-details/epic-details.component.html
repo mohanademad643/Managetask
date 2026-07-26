@@ -194,6 +194,7 @@
           Tasks
         </h3>
         <button
+       [routerLink]="['/project', projectId(), 'tasks', 'new']"
           type="button"
           class="inline-flex items-center gap-1 text-body-md font-semibold text-[var(--color-primary-container)] hover:text-[var(--color-primary-hover)] cursor-pointer"
         >
@@ -240,7 +241,7 @@
         <p class="text-body-md text-[var(--color-text-body)] mb-4">
           No tasks have been added to this epic yet
         </p>
-        <button type="button" class="btn btn-primary !w-auto gap-2">
+        <button [routerLink]="['/project', projectId(), 'tasks', 'new']" type="button" class="btn btn-primary !w-auto gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="w-4 h-4"

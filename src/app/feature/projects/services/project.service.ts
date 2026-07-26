@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { CreateEpicPayload, Epic, PagedResult, Project, ProjectMember, ProjectMemberResponse, UpdateEpicPayload } from '../../../core/models/project.model';
+import { CreateEpicPayload, CreateTaskPayload, Epic, PagedResult, Project, ProjectMember, ProjectMemberResponse, Task, UpdateEpicPayload } from '../../../core/models/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
@@ -75,12 +75,17 @@ export class ProjectService {
       );
   }
 
-   getEpics(projectId: string, limit: number, offset: number): Observable<PagedResult<Epic>> {
-    return this.http
-      .get<Epic[]>(`${this.baseUrl}/project_epics?project_id=eq.${projectId}&limit=${limit}&offset=${offset}`, {
-        headers: { Prefer: 'count=exact' },
-        observe: 'response',
-      })
+   getEpics(projectId: string, limit?: number, offset?: number): Observable<PagedResult<Epic>> {
+     let params = new HttpParams();
+  if (limit != null) params = params.set('limit', limit);
+  if (offset != null) params = params.set('offset', offset);
+
+  return this.http
+    .get<Epic[]>(`${this.baseUrl}/project_epics?project_id=eq.${projectId}`, {
+      params,
+      headers: { Prefer: 'count=exact' },
+      observe: 'response',
+    })
       .pipe(
        map(({ body, headers }) => {
           const items = body ?? [];
@@ -129,4 +134,8 @@ export class ProjectService {
       }),
     );
   }
+
+  createTask(payload: CreateTaskPayload): Observable<Task> {
+  return this.http.post<Task>(`${this.baseUrl}/tasks`, payload);
+}
 }
