@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, input, OnInit, output, signal } from '@a
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { Epic, ProjectMember, UpdateEpicPayload } from '../../../../core/models/project.model';
+import { Epic, EpicTask, ProjectMember, UpdateEpicPayload } from '../../../../core/models/project.model';
 import { ProjectService } from '../../services/project.service';
 import { ValidationFieldComponent } from '../../../../shared/components/validation-field/validation-field.component';
 import { ToastService } from '../../../../shared/services/toster.service';
@@ -33,6 +33,10 @@ export class EpicDetailsComponent implements OnInit {
   readonly members = signal<ProjectMember[]>([]);
   readonly editingAssignee = signal(false);
 
+  readonly tasks = signal<EpicTask[]>([]);
+  readonly tasksLoading = signal(true);
+  readonly tasksError = signal(false);
+
   readonly form = this.fb.nonNullable.group({
     title: ['', Validators.required],
     description: [''],
@@ -43,6 +47,7 @@ export class EpicDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.loadEpic();
     this.loadMembers();
+    this.loadTasks();
   }
 
   close(): void {
@@ -102,6 +107,26 @@ export class EpicDetailsComponent implements OnInit {
         },
       });
   }
+
+  loadTasks(): void {
+    this.tasksLoading.set(true);
+    this.tasksError.set(false);
+
+    this.projectService
+      .getTasksByEpic(this.epicId())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (tasks) => {
+          this.tasks.set(tasks);
+          this.tasksLoading.set(false);
+        },
+        error: () => {
+          this.tasksError.set(true);
+          this.tasksLoading.set(false);
+        },
+      });
+  }
+
 
   private loadMembers(): void {
     this.projectService

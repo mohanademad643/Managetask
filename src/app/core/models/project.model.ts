@@ -114,3 +114,31 @@ export interface CreateTaskPayload {
   assignee_id?: string;
   due_date?: string;
 }
+
+export interface EpicTaskUser {
+  id: string;
+  name: string;
+  email: string;
+  department?: string;
+}
+
+export interface EpicTaskEpicRef {
+  id: string;
+  title: string;
+  epic_id: string;
+}
+
+export interface EpicTask {
+  id: string;
+  project_id: string;
+  epic_id: string;
+  task_id: string;
+  title: string;
+  description?: string;
+  status: TaskStatus;
+  created_at: string;
+  due_date?: string;
+  epic: EpicTaskEpicRef;
+  created_by: EpicTaskUser;
+  assignee?: EpicTaskUser;
+}
