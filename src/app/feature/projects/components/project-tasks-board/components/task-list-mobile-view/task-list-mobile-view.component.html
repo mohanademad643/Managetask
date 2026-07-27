@@ -1,0 +1,107 @@
+@if (tasks().length === 0) {
+  <div
+    class="flex flex-col items-center justify-center py-16 text-center text-[0.85rem] text-[var(--color-text-secondary)]"
+  >
+    No tasks found in this project.
+  </div>
+} @else {
+  <div class="flex flex-col gap-3">
+    @for (task of tasks(); track task.id) {
+      <article
+        class="p-[16px] rounded-[10px] border border-[#F1F3FF] rounded-lg bg-white shadow-[0px_1px_2px_0px_#0000000D]"
+      >
+        <div class="flex items-start justify-between gap-3">
+          <span
+            class="text-[0.75rem] font-medium text-[var(--color-text-secondary)]"
+          >
+            {{ task.task_id || task.id }}
+          </span>
+
+          @if (statusConfig(task.status); as config) {
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-[700] uppercase tracking-wide"
+              [style.background-color]="
+                'color-mix(in srgb, var(' + config.color + ') 15%, transparent)'
+              "
+              [style.color]="'var(' + config.color + ')'"
+            >
+              {{ config.label }}
+            </span>
+          }
+        </div>
+
+        <h3
+          class="mt-1 text-[1rem] font-bold leading-snug text-[var(--color-text-body)]"
+        >
+          {{ task.title }}
+        </h3>
+
+        <div class="flex items-center justify-between mt-3">
+          <div class="flex items-center gap-2.5">
+            @if (task.assignee) {
+              <span
+                class="h-8 w-8 p-2 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-[11px] font-[700] ring-2 ring-white"
+                [attr.aria-label]="task.assignee.name"
+                [title]="task.assignee.name"
+              >
+                {{ task.assignee!.name ? initials(task.assignee!.name) : "—" }}
+              </span>
+            }
+            <div class="flex flex-col leading-tight">
+              <span
+                class="text-[0.6875rem] font-semibold uppercase tracking-wide text-[var(--color-text-secondary)]"
+              >
+                Due Date
+              </span>
+              @if (task.due_date) {
+                <span
+                  class="text-[0.8125rem] font-medium text-[var(--color-text-body)]"
+                >
+                  {{ task.due_date | date: "MMM d, y" }}
+                </span>
+              } @else {
+                <span
+                  class="text-[0.8125rem] text-[var(--color-text-secondary)]"
+                  >—</span
+                >
+              }
+            </div>
+          </div>
+
+          <button
+            type="button"
+            aria-label="Task actions"
+            class="p-1.5 rounded-full text-[var(--color-neutral-600)] hover:bg-[var(--color-surface-low)] cursor-pointer"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8.00016 8.66634C8.36835 8.66634 8.66683 8.36786 8.66683 7.99967C8.66683 7.63148 8.36835 7.33301 8.00016 7.33301C7.63197 7.33301 7.3335 7.63148 7.3335 7.99967C7.3335 8.36786 7.63197 8.66634 8.00016 8.66634Z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M12.6667 8.66634C13.0349 8.66634 13.3333 8.36786 13.3333 7.99967C13.3333 7.63148 13.0349 7.33301 12.6667 7.33301C12.2985 7.33301 12 7.63148 12 7.99967C12 8.36786 12.2985 8.66634 12.6667 8.66634Z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M3.33317 8.66634C3.70136 8.66634 3.99984 8.36786 3.99984 7.99967C3.99984 7.63148 3.70136 7.33301 3.33317 7.33301C2.96498 7.33301 2.6665 7.63148 2.6665 7.99967C2.6665 8.36786 2.96498 8.66634 3.33317 8.66634Z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+      </article>
+    }
+  </div>
+}

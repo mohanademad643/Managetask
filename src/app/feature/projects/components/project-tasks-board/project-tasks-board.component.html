@@ -1,0 +1,141 @@
+<div class="p-1">
+  <nav class="flex items-center gap-1.5 mb-3 text-[0.6875rem] font-bold uppercase tracking-[0.08em]">
+    <a routerLink="/projects" class="text-[var(--color-neutral-600)] hover:text-[var(--color-text-body)]">Projects</a>
+    <span class="text-[var(--color-neutral-200)]">›</span>
+    <a [routerLink]="['/project', projectId()]" class="text-[var(--color-neutral-600)] hover:text-[var(--color-text-body)]">
+      {{ projectName() || 'Project' }}
+    </a>
+    <span class="text-[var(--color-neutral-200)]">›</span>
+    <span class="text-[var(--color-text-body)]">Tasks</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold text-[var(--color-text-body)]">Active Workboard</h1>
+  <p class="hidden sm:block mt-1 text-[0.85rem] text-[var(--color-text-secondary)] mb-6">
+    Curating {{ projectName() || 'this project' }}'s production pipeline and milestones.
+  </p>
+
+  <div class="flex flex-col gap-3 mt-4 mb-5 sm:hidden">
+    <div class="relative flex items-center text-[var(--color-neutral-600)]">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="absolute left-3.5 w-4 h-4 pointer-events-none">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+      </svg>
+      <input
+        type="search"
+        placeholder="Search tasks..."
+        aria-label="Search tasks"
+        class="w-full pl-10 pr-4 py-2.5 rounded-lg border-[1.5px] border-transparent text-[0.85rem] bg-[var(--color-surface-highest)] text-[var(--color-text-body)] outline-none focus:bg-[#eef2ff] focus:border-[var(--color-primary-container)] focus:shadow-[0_0_0_3px_var(--color-primary-focus-ring)]"
+      />
+    </div>
+
+    <a
+      [routerLink]="['/project', projectId(), 'tasks', 'new']"
+      class="flex items-center justify-center gap-1.5 w-full py-3 rounded-lg bg-[var(--color-primary-container)] text-white text-[0.9rem] font-semibold"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+      </svg>
+      Create Task
+    </a>
+  </div>
+
+  <div class="hidden sm:flex items-center gap-2 justify-end -mt-14 mb-6">
+    <div class="relative flex items-center w-full max-w-[240px] text-[var(--color-neutral-600)]">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="absolute left-3.5 w-4 h-4 pointer-events-none">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+      </svg>
+      <input
+        type="search"
+        placeholder="Search tasks..."
+        aria-label="Search tasks"
+        class="w-full pl-10 pr-4 py-2.5 rounded-lg border-[1.5px] border-transparent text-[0.85rem] bg-[var(--color-surface-highest)] text-[var(--color-text-body)] outline-none focus:bg-[#eef2ff] focus:border-[var(--color-primary-container)] focus:shadow-[0_0_0_3px_var(--color-primary-focus-ring)]"
+      />
+    </div>
+
+    <div class="relative">
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        [attr.aria-expanded]="viewMenuOpen()"
+        aria-label="Switch view"
+        class="flex items-center gap-2 py-2.5 pl-4 pr-3 rounded-lg border-[1.5px] border-[var(--color-surface-highest)] text-[0.85rem] font-medium bg-[var(--color-surface)] text-[var(--color-text-body)] outline-none cursor-pointer focus-visible:shadow-[0_0_0_3px_var(--color-primary-focus-ring)]"
+        (click)="viewMenuOpen.set(!viewMenuOpen())"
+      >
+        @if (activeView() === 'list') {
+          <svg width="14" height="6" viewBox="0 0 14 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+            <path d="M4.08333 1.16667V0H12.25V1.16667H4.08333ZM4.08333 3.5V2.33333H12.25V3.5H4.08333ZM4.08333 5.83333V4.66667H12.25V5.83333H4.08333ZM2.33333 1.16667C2.16806 1.16667 2.02951 1.11076 1.91771 0.998958C1.8059 0.887153 1.75 0.748611 1.75 0.583333C1.75 0.418056 1.8059 0.279514 1.91771 0.167708C2.02951 0.0559028 2.16806 0 2.33333 0C2.49861 0 2.63715 0.0559028 2.74896 0.167708C2.86076 0.279514 2.91667 0.418056 2.91667 0.583333C2.91667 0.748611 2.86076 0.887153 2.74896 0.998958C2.63715 1.11076 2.49861 1.16667 2.33333 1.16667ZM2.33333 3.5C2.16806 3.5 2.02951 3.4441 1.91771 3.33229C1.8059 3.22049 1.75 3.08194 1.75 2.91667C1.75 2.75139 1.8059 2.61285 1.91771 2.50104C2.02951 2.38924 2.16806 2.33333 2.33333 2.33333C2.49861 2.33333 2.63715 2.38924 2.74896 2.50104C2.86076 2.61285 2.91667 2.75139 2.91667 2.91667C2.91667 3.08194 2.86076 3.22049 2.74896 3.33229C2.63715 3.4441 2.49861 3.5 2.33333 3.5ZM2.33333 5.83333C2.16806 5.83333 2.02951 5.77743 1.91771 5.66563C1.8059 5.55382 1.75 5.41528 1.75 5.25C1.75 5.08472 1.8059 4.94618 1.91771 4.83437C2.02951 4.72257 2.16806 4.66667 2.33333 4.66667C2.49861 4.66667 2.63715 4.72257 2.74896 4.83437C2.86076 4.94618 2.91667 5.08472 2.91667 5.25C2.91667 5.41528 2.86076 5.55382 2.74896 5.66563C2.63715 5.77743 2.49861 5.83333 2.33333 5.83333Z" fill="#003D9B" />
+          </svg>
+          <span>List View</span>
+        } @else {
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+            <path d="M0 6V0H6V6H0ZM0 13.5V7.5H6V13.5H0ZM7.5 6V0H13.5V6H7.5ZM7.5 13.5V7.5H13.5V13.5H7.5ZM1.5 4.5H4.5V1.5H1.5V4.5ZM9 4.5H12V1.5H9V4.5ZM9 12H12V9H9V12ZM1.5 12H4.5V9H1.5V12Z" fill="#041B3C" />
+          </svg>
+          <span>Board View</span>
+        }
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 ml-1 text-[var(--color-neutral-600)] shrink-0">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+        </svg>
+      </button>
+
+      @if (viewMenuOpen()) {
+        <ul
+          role="listbox"
+          aria-label="View options"
+          class="absolute z-10 mt-1.5 min-w-full w-max rounded-lg border-[1.5px] border-[var(--color-surface-highest)] bg-[var(--color-surface)] shadow-[0px_8px_16px_-4px_#041B3C1F] overflow-hidden py-1"
+        >
+          <li role="none">
+            <button
+              type="button"
+              role="option"
+              [attr.aria-selected]="activeView() === 'list'"
+              class="w-full flex items-center gap-2 px-4 py-2.5 text-[0.85rem] font-medium text-[var(--color-text-body)] hover:bg-[var(--color-surface-low)] cursor-pointer"
+              (click)="onViewChange('list'); viewMenuOpen.set(false)"
+            >
+              <svg width="14" height="6" viewBox="0 0 14 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+                <path d="M4.08333 1.16667V0H12.25V1.16667H4.08333ZM4.08333 3.5V2.33333H12.25V3.5H4.08333ZM4.08333 5.83333V4.66667H12.25V5.83333H4.08333ZM2.33333 1.16667C2.16806 1.16667 2.02951 1.11076 1.91771 0.998958C1.8059 0.887153 1.75 0.748611 1.75 0.583333C1.75 0.418056 1.8059 0.279514 1.91771 0.167708C2.02951 0.0559028 2.16806 0 2.33333 0C2.49861 0 2.63715 0.0559028 2.74896 0.167708C2.86076 0.279514 2.91667 0.418056 2.91667 0.583333C2.91667 0.748611 2.86076 0.887153 2.74896 0.998958C2.63715 1.11076 2.49861 1.16667 2.33333 1.16667ZM2.33333 3.5C2.16806 3.5 2.02951 3.4441 1.91771 3.33229C1.8059 3.22049 1.75 3.08194 1.75 2.91667C1.75 2.75139 1.8059 2.61285 1.91771 2.50104C2.02951 2.38924 2.16806 2.33333 2.33333 2.33333C2.49861 2.33333 2.63715 2.38924 2.74896 2.50104C2.86076 2.61285 2.91667 2.75139 2.91667 2.91667C2.91667 3.08194 2.86076 3.22049 2.74896 3.33229C2.63715 3.4441 2.49861 3.5 2.33333 3.5ZM2.33333 5.83333C2.16806 5.83333 2.02951 5.77743 1.91771 5.66563C1.8059 5.55382 1.75 5.41528 1.75 5.25C1.75 5.08472 1.8059 4.94618 1.91771 4.83437C2.02951 4.72257 2.16806 4.66667 2.33333 4.66667C2.49861 4.66667 2.63715 4.72257 2.74896 4.83437C2.86076 4.94618 2.91667 5.08472 2.91667 5.25C2.91667 5.41528 2.86076 5.55382 2.74896 5.66563C2.63715 5.77743 2.49861 5.83333 2.33333 5.83333Z" fill="#003D9B" />
+              </svg>
+              List View
+            </button>
+          </li>
+          <li role="none">
+            <button
+              type="button"
+              role="option"
+              [attr.aria-selected]="activeView() === 'board'"
+              class="w-full flex items-center gap-2 px-4 py-2.5 text-[0.85rem] font-medium text-[var(--color-text-body)] hover:bg-[var(--color-surface-low)] cursor-pointer"
+              (click)="onViewChange('board'); viewMenuOpen.set(false)"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+                <path d="M0 6V0H6V6H0ZM0 13.5V7.5H6V13.5H0ZM7.5 6V0H13.5V6H7.5ZM7.5 13.5V7.5H13.5V13.5H7.5ZM1.5 4.5H4.5V1.5H1.5V4.5ZM9 4.5H12V1.5H9V4.5ZM9 12H12V9H9V12ZM1.5 12H4.5V9H1.5V12Z" fill="#041B3C" />
+              </svg>
+              Board View
+            </button>
+          </li>
+        </ul>
+      }
+    </div>
+
+    <button
+      type="button"
+      aria-label="Filter tasks"
+      class="inline-flex items-center justify-center w-[42px] h-[42px] rounded-lg border-[1.5px] border-[var(--color-surface-highest)] bg-[var(--color-surface)] text-[var(--color-text-secondary)] cursor-pointer hover:bg-[var(--color-surface-low)]"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-[18px] h-[18px]">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h18M6 9h12M9 13.5h6M11 18h2" />
+      </svg>
+    </button>
+  </div>
+
+  @if (projectId(); as id) {
+    <div class="sm:hidden">
+      <app-task-list-mobile-view [projectId]="id" [tasks]="allTasks()" />
+    </div>
+
+    <div class="hidden sm:block">
+      @if (activeView() === 'board') {
+        <app-task-board-view [projectId]="id" [statuses]="statuses" [columns]="columns()" />
+      } @else {
+        <span>Task Table List </span>
+      }
+    </div>
+  }
+</div>

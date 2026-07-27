@@ -1,0 +1,110 @@
+<div class="flex items-start gap-4 overflow-x-auto pb-4">
+  @for (column of statuses(); track column.status; let i = $index) {
+    <section class="flex flex-col flex-none w-[300px] h-[752] p-1">
+      <div class="flex items-center justify-between gap-2 mb-3">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="w-2 h-2 rounded-full flex-shrink-0" [style.backgroundColor]="'var(' + column.color + ')'"></span>
+          <h2 class="text-[0.75rem] font-bold uppercase tracking-wide text-[var(--color-text-secondary)] truncate">
+            {{ column.label }}
+          </h2>
+          <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-md bg-[var(--color-surface-3)] text-[var(--color-text-secondary)] text-[0.7rem] font-semibold">
+            {{ columns()[i].tasks.length }}
+          </span>
+        </div>
+
+        <a
+          [routerLink]="['/project', projectId(), 'tasks', 'new']"
+          [queryParams]="{ status: column.status }"
+          class="inline-flex items-center justify-center w-6 h-6 rounded-md text-[var(--color-neutral-600)] cursor-pointer hover:bg-[var(--color-surface-low)] hover:text-[var(--color-primary-container)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-primary-container)] focus-visible:outline-offset-2"
+          [attr.aria-label]="'Add task to ' + column.label"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-[18px] h-[18px]">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </a>
+      </div>
+
+      <!-- column body -->
+      <div class="flex flex-col gap-2.5 overflow-y-auto">
+        <a
+          [routerLink]="['/project', projectId(), 'tasks', 'new']"
+          [queryParams]="{ status: column.status }"
+          class="flex items-center justify-center gap-2 py-3 rounded-lg border-2 border-dashed border-[var(--color-neutral-200)] text-[0.7rem] font-bold uppercase tracking-wide text-[var(--color-neutral-600)] cursor-pointer hover:border-[var(--color-primary-container)] hover:text-[var(--color-primary-container)]"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+          Add new task
+        </a>
+
+        @switch (columns()[i].state) {
+          @case ('loading') {
+            <p class="py-6 text-center text-[0.8rem] text-[var(--color-text-secondary)]">Loading tasks…</p>
+          }
+          @case ('error') {
+            <p class="py-6 text-center text-[0.8rem] text-[var(--color-error)]">Couldn't load tasks.</p>
+          }
+          @case ('empty') {
+            <p class="py-6 text-center text-[0.8rem] text-[var(--color-text-secondary)]">No tasks yet.</p>
+          }
+          @case ('data') {
+            @for (task of columns()[i].tasks; track task.id) {
+              <article
+                class="task-card"
+                [class.task-card--overdue]="dueDateStatus(task.due_date) === 'overdue'"
+                [class.task-card--today]="dueDateStatus(task.due_date) === 'today'"
+              >
+                <h3 class="text-[0.9rem] font-medium leading-snug text-[var(--color-text-body)]">
+                  {{ task.title }}
+                </h3>
+
+                <div class="flex items-center justify-between mt-0.5">
+                  @switch (dueDateStatus(task.due_date)) {
+                    @case ('overdue') {
+                      <span class="inline-flex items-center gap-1 text-[0.7rem] font-bold uppercase tracking-wide text-[var(--color-error)]">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-[13px] h-[13px]">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                        </svg>
+                        Delayed
+                      </span>
+                    }
+                    @case ('today') {
+                      <span class="inline-flex items-center gap-1 text-[0.7rem] font-bold uppercase tracking-wide text-[var(--color-primary-container)]">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-[13px] h-[13px]">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                        </svg>
+                        Today
+                      </span>
+                    }
+                    @case ('upcoming') {
+                      <span class="inline-flex items-center gap-1 text-[0.7rem] uppercase tracking-wide text-[var(--color-text-secondary)]">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-[13px] h-[13px]">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                        </svg>
+                        {{ task.due_date | date:'MMM d'}}
+                      </span>
+                    }
+                    @default {
+                      <span></span>
+                    }
+                  }
+
+                  @if (task.assignee) {
+                    <span
+                      class="task-avatar"
+                      [class.task-avatar--today]="dueDateStatus(task.due_date) === 'today'"
+                      [attr.aria-label]="task.assignee.name"
+                      [title]="task.assignee.name"
+                    >
+                      {{ initials(task.assignee.name) }}
+                    </span>
+                  }
+                </div>
+              </article>
+            }
+          }
+        }
+      </div>
+    </section>
+  }
+</div>

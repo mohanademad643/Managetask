@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, map, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { CreateEpicPayload, CreateTaskPayload, Epic, EpicTask, PagedResult, Project, ProjectMember, ProjectMemberResponse, Task, UpdateEpicPayload } from '../../../core/models/project.model';
+import { CreateEpicPayload, CreateTaskPayload, Epic, EpicTask, PagedResult, Project, ProjectMember, ProjectMemberResponse, Task, TaskStatus, UpdateEpicPayload } from '../../../core/models/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
@@ -104,5 +104,12 @@ export class ProjectService {
 
   getTasksByEpic(epicId: string): Observable<EpicTask[]> {
     return this.http.get<EpicTask[]>(`${this.baseUrl}/project_tasks?epic_id=eq.${epicId}`);
+  }
+
+  getTasksByStatus(projectId: string, status: TaskStatus): Observable<EpicTask[]> {
+    const params = new HttpParams()
+      .set('project_id', `eq.${projectId}`)
+      .set('status', `eq.${status}`);
+    return this.http.get<EpicTask[]>(`${this.baseUrl}/project_tasks`, { params });
   }
 }

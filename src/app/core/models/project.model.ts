@@ -142,3 +142,25 @@ export interface EpicTask {
   created_by: EpicTaskUser;
   assignee?: EpicTaskUser;
 }
+
+export interface TaskStatusConfig {
+  status: TaskStatus;
+  label: string;
+  color: string; 
+}
+export type DueStatus = 'overdue' | 'today' | 'upcoming';
+
+export interface ColumnData {
+  state: ViewState;
+  tasks: EpicTask[];
+}
+export const TASK_STATUS_CONFIGS: TaskStatusConfig[] = [
+  { status: TaskStatus.ToDo, label: 'To Do', color: '--color-neutral-600' },
+  { status: TaskStatus.InProgress, label: 'In Progress', color: '--color-primary-container' },
+  { status: TaskStatus.Blocked, label: 'Blocked', color: '--color-error' },
+  { status: TaskStatus.InReview, label: 'In Review', color: '--color-warning' },
+  { status: TaskStatus.ReadyForQa, label: 'Ready for QA', color: '--color-primary' },
+  { status: TaskStatus.Reopened, label: 'Reopened', color: '--color-error' },
+  { status: TaskStatus.ReadyForProduction, label: 'Ready for Production', color: '--color-success' },
+  { status: TaskStatus.Done, label: 'Done', color: '--color-success' },
+];
