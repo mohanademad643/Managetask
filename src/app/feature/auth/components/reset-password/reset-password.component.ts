@@ -14,6 +14,7 @@ import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ValidationFieldComponent } from '../../../../shared/components/validation-field/validation-field.component';
 import { ToastService } from '../../../../shared/services/toster.service';
+import { AppHttpError } from '../../../../core/models/auth';
 
 @Component({
   selector: 'app-reset-password',
@@ -98,10 +99,9 @@ export class ResetPasswordComponent {
            this.router.navigate(['/auth/login']);
          }, 3000);  
         },
-        error: (message: string) => {
-          this.loading.set(false);
-          this.apiError.set(message);
-        },
+         error: (err: AppHttpError) => {
+               this.apiError.set(err.message);
+             },
       });
   }
 }

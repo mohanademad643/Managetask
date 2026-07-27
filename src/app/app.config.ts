@@ -5,9 +5,10 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { routes } from './app.routes';
 import { supabaseInterceptor } from './core/interceptors/supabase.interceptor';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideRouter(routes),
-    provideHttpClient(withFetch(),withInterceptors([supabaseInterceptor,authInterceptor]))   
+    provideHttpClient(withFetch(),withInterceptors([supabaseInterceptor,authInterceptor,errorInterceptor]))   
   ]
 };

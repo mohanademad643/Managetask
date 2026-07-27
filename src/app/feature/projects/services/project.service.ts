@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { Observable, catchError, map, tap, throwError } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { CreateEpicPayload, CreateTaskPayload, Epic, EpicTask, PagedResult, Project, ProjectMember, ProjectMemberResponse, Task, UpdateEpicPayload } from '../../../core/models/project.model';
 
@@ -19,24 +19,11 @@ export class ProjectService {
   getProjects(): Observable<Project[]> {
     return this.http.get<Project[]>(`${this.baseUrl}/rpc/get_projects`).pipe(
       tap((data) => this.projects.set(data)),
-      catchError((err) => {
-        const status = err?.status;
-        if (status === 401) return throwError(() => ({ type: 'unauthorized' }));
-        return throwError(() => ({ type: 'error' }));
-      }),
     );
   }
   createProject(name: string, description: string): Observable<Project> {
     return this.http
-      .post<Project>(`${this.baseUrl}/projects`, { name, description })
-      .pipe(
-        catchError((err) => {
-          const status = err?.status;
-          if (status === 401)
-            return throwError(() => ({ type: 'unauthorized' }));
-          return throwError(() => ({ type: 'error' }));
-        }),
-      );
+      .post<Project>(`${this.baseUrl}/projects`, { name, description });
   }
   updateProject(
     id: string,
@@ -54,9 +41,6 @@ export class ProjectService {
             list.map((p) => (p.id === id ? { ...p, name, description } : p)),
           );
         }),
-        catchError((err) =>
-          throwError(() => err.error?.msg ?? 'Failed to load user data.'),
-        ),
       );
   }
   getMembers(projectId: string): Observable<ProjectMember[]> {
@@ -93,22 +77,12 @@ export class ProjectService {
           const total = Number(headers.get('content-range')?.split('/')[1]) || items.length;
           return { items, total };
         }),
-        catchError((err) => {
-          const status = err?.status;
-          if (status === 401) return throwError(() => ({ type: 'unauthorized' }));
-          return throwError(() => ({ type: 'error' }));
-        }),
       );
   }
 
  createEpic(payload: CreateEpicPayload): Observable<Epic> {
     return this.http.post<Epic>(`${this.baseUrl}/epics`, payload).pipe(
       tap((epic) => this.epics.update((list) => [epic, ...list])),
-      catchError((err) => {
-        const status = err?.status;
-        if (status === 401) return throwError(() => ({ type: 'unauthorized' }));
-        return throwError(() => err.error?.msg  );
-      }),
     );
   }
 
@@ -117,22 +91,11 @@ export class ProjectService {
       .get<Epic[]>(`${this.baseUrl}/project_epics?project_id=eq.${projectId}&id=eq.${epicId}`)
       .pipe(
         map((rows) => rows[0]),
-        catchError((err) => {
-          const status = err?.status;
-          if (status === 401) return throwError(() => ({ type: 'unauthorized' }));
-          return throwError(() => err.error?.msg  );
-        }),
       );
   }
   
    updateEpic(epicId: string, payload: UpdateEpicPayload): Observable<void> {
-    return this.http.patch<void>(`${this.baseUrl}/epics?id=eq.${epicId}`, payload).pipe(
-      catchError((err) => {
-        const status = err?.status;
-        if (status === 401) return throwError(() => ({ type: 'unauthorized' }));
-        return throwError(() => ({ type: 'error' }));
-      }),
-    );
+    return this.http.patch<void>(`${this.baseUrl}/epics?id=eq.${epicId}`, payload);
   }
 
   createTask(payload: CreateTaskPayload): Observable<Task> {
@@ -140,14 +103,6 @@ export class ProjectService {
 }
 
   getTasksByEpic(epicId: string): Observable<EpicTask[]> {
-    return this.http
-      .get<EpicTask[]>(`${this.baseUrl}/project_tasks?epic_id=eq.${epicId}`)
-      .pipe(
-        catchError((err) => {
-          const status = err?.status;
-          if (status === 401) return throwError(() => ({ type: 'unauthorized' }));
-          return throwError(() => ({ type: 'error' }));
-        }),
-      );
+    return this.http.get<EpicTask[]>(`${this.baseUrl}/project_tasks?epic_id=eq.${epicId}`);
   }
 }

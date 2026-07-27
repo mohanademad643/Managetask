@@ -12,6 +12,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ValidationFieldComponent } from '../../../../shared/components/validation-field/validation-field.component';
 import { AuthService } from '../../services/auth.service';
+import { AppHttpError } from '../../../../core/models/auth';
 
 const Timer_DURATION_SECONDS = 5 * 60; 
 const MAX_RESEND_ATTEMPTS = 3; 
@@ -78,10 +79,9 @@ export class ForgotPasswordComponent {
 
     this.authService.ForgetPassword(email).subscribe({
       next: () => this.handleSendSuccess(),
-      error: (message: string) => {
-          this.loading.set(false);
-          this.apiError.set(message);
-      },
+        error: (err: AppHttpError) => {
+              this.apiError.set(err.message);
+            },
     });
   }
 

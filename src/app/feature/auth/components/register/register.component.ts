@@ -13,7 +13,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ValidationFieldComponent } from '../../../../shared/components/validation-field/validation-field.component';
-import { RegisterRequest } from '../../../../core/models/auth';
+import { AppHttpError, RegisterRequest } from '../../../../core/models/auth';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -113,10 +113,9 @@ export class RegisterComponent {
         this.loading.set(false);
         this.router.navigate(['/projects']);
       },
-      error: (message: string) => {
-        this.loading.set(false);
-        this.apiError.set(message);
-      },
+     error: (err: AppHttpError) => {
+           this.apiError.set(err.message);
+         },
     });
   }
 }

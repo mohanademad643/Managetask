@@ -78,3 +78,10 @@ export interface AuthSession {
 }
 
 export type UserProfile = Pick<UserMetadata, 'name' | 'email' | 'department'>;
+
+export interface AppHttpError {
+  type: 'error' | 'unauthorized';
+  status?: number;
+  message: string;
+}
+ 

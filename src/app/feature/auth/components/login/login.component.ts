@@ -8,7 +8,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ValidationFieldComponent } from '../../../../shared/components/validation-field/validation-field.component';
 import { AuthService } from '../../services/auth.service';
-import { LoginRequest } from '../../../../core/models/auth';
+import { AppHttpError, LoginRequest } from '../../../../core/models/auth';
 
 @Component({
   selector: 'app-login',
@@ -50,9 +50,12 @@ export class LoginComponent {
         this.loading.set(false);
         this.router.navigate(['/projects']);
       },
-      error: (message: string) => {
+      error: (err: AppHttpError) => {
         this.loading.set(false);
-        this.apiError.set(message);
+        if(err.status === 400)
+        this.apiError.set('email or password is incorrect');
+        else
+        this.apiError.set(err.message);
       },
     });
   }

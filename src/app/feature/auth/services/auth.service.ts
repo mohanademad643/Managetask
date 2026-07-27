@@ -1,5 +1,5 @@
 import { inject, Injectable, signal, computed } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Observable, throwError, of } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
@@ -31,11 +31,6 @@ export class AuthService {
   register(payload: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.baseUrl}/signup`, payload).pipe(
       tap((res) => this.persist(res)),
-      catchError((err: HttpErrorResponse) =>
-        throwError(
-          () => err.error?.msg ?? 'Something went wrong. Please try again.',
-        ),
-      ),
     );
   }
 
@@ -44,11 +39,6 @@ export class AuthService {
       .post<AuthResponse>(`${this.baseUrl}/token?grant_type=password`, payload)
       .pipe(
         tap((res) => this.persist(res)),
-        catchError((err: HttpErrorResponse) =>
-          throwError(
-            () => err.error?.msg ?? 'Something went wrong. Please try again.',
-          ),
-        ),
       );
   }
 
@@ -69,10 +59,6 @@ export class AuthService {
         email: user.email,
         department: user.user_metadata.department,
       })),
-
-      catchError((err: HttpErrorResponse) =>
-        throwError(() => err.error?.msg ?? 'Failed to load user data.'),
-      ),
     );
   }
 
@@ -124,28 +110,10 @@ export class AuthService {
   }
 
   ForgetPassword(email: string): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/recover`, { email }).pipe(
-      catchError((err: HttpErrorResponse) =>
-        throwError(
-          () =>
-            err.error?.msg ??
-            err.error?.error_description ??
-            'Something went wrong. Please try again.',
-        ),
-      ),
-    );
+    return this.http.post<void>(`${this.baseUrl}/recover`, { email });
   }
   ResetPassword(password:string,accessToken: string){
-     return this.http.put<void>(`${this.baseUrl}/user`, { password },   { headers: { Authorization: `Bearer ${accessToken}` } }).pipe(
-      catchError((err: HttpErrorResponse) =>
-        throwError(
-          () =>
-            err.error?.msg ??
-            err.error?.error_description ??
-            'Something went wrong. Please try again.',
-        ),
-      ),
-    );
+     return this.http.put<void>(`${this.baseUrl}/user`, { password },   { headers: { Authorization: `Bearer ${accessToken}` } });
   }
 
 
