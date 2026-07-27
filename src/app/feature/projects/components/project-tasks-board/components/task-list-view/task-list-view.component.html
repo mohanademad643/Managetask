@@ -1,0 +1,146 @@
+    <div
+      class="overflow-x-auto border border-[#F1F3FF] rounded-lg bg-white shadow-[0px_1px_2px_0px_#0000000D]"
+    >
+      <table class="w-full text-left text-sm text-[#434654]">
+        <thead
+          class="bg-[#F1F3FF80] uppercase tracking-wider text-xs font-semibold text-gray-500"
+        >
+          <tr>
+            <th class="px-6 py-4 w-32">Task ID</th>
+            <th class="px-6 py-4">Title</th>
+            <th class="px-6 py-4 w-40">Status</th>
+            <th class="px-6 py-4 w-40">Due Date</th>
+            <th class="px-6 py-4 w-48">Assignee</th>
+            <th class="px-6 py-4 w-12"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          @for (task of tasks(); track task.id) {
+            <tr class="hover:bg-gray-50 transition-colors group">
+              <td
+                class="px-6 py-4 font-[400] text-[12px] text-[var(--color-primary)]"
+              >
+                {{ task.task_id || task.id }}
+              </td>
+
+              <td class="px-6 py-4 font-medium text-gray-900">
+                {{ task.title }}
+              </td>
+
+              <td class="px-6 py-4">
+                @if (statusConfig(task.status); as config) {
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-[700] uppercase tracking-wide"
+                    [style.background-color]="
+                      'color-mix(in srgb, var(' +
+                      config.color +
+                      ') 15%, transparent)'
+                    "
+                    [style.color]="'var(' + config.color + ')'"
+                  >
+                    {{ config.label }}
+                  </span>
+                }
+              </td>
+
+              <td class="px-6 py-4 text-[#434654] text-[14px]">
+                @if (task.due_date) {
+                  {{ task.due_date | date }}
+                } @else {
+                  <span class="text-[#434654]">—</span>
+                }
+              </td>
+
+              <!-- Assignee -->
+              <td class="px-6 py-4">
+                @if (task.assignee) {
+                  <div class="flex items-center gap-3 w-full">
+                    <div
+                      class="h-8 w-8 p-2 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center text-[11px] font-[700] ring-2 ring-white"
+                    >
+                      {{ task.assignee!.name ? initials(task.assignee!.name) : '—' }}
+                    </div>
+                    <span
+                      class="font-medium text-[#041B3C] text-[14px] w-full"
+                      >{{ task.assignee.name }}</span
+                    >
+                  </div>
+                } @else {
+                  <span class="text-gray-400 italic">Unassigned</span>
+                }
+              </td>
+
+              <!-- Actions -->
+              <td class="px-6 py-4 text-right">
+                <button
+                  class="p-2 rounded-full hover:bg-gray-100 text-[#020617] hover:text-gray-600 transition-colors"
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.00016 8.66634C8.36835 8.66634 8.66683 8.36786 8.66683 7.99967C8.66683 7.63148 8.36835 7.33301 8.00016 7.33301C7.63197 7.33301 7.3335 7.63148 7.3335 7.99967C7.3335 8.36786 7.63197 8.66634 8.00016 8.66634Z"
+                      stroke="#020617"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M12.6667 8.66634C13.0349 8.66634 13.3333 8.36786 13.3333 7.99967C13.3333 7.63148 13.0349 7.33301 12.6667 7.33301C12.2985 7.33301 12 7.63148 12 7.99967C12 8.36786 12.2985 8.66634 12.6667 8.66634Z"
+                      stroke="#020617"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M3.33317 8.66634C3.70136 8.66634 3.99984 8.36786 3.99984 7.99967C3.99984 7.63148 3.70136 7.33301 3.33317 7.33301C2.96498 7.33301 2.6665 7.63148 2.6665 7.99967C2.6665 8.36786 2.96498 8.66634 3.33317 8.66634Z"
+                      stroke="#020617"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                No tasks found in this project.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div
+        class="px-6 py-4 bg-[#F1F3FF33] flex items-center justify-between text-xs text-[#434654] font-[500] text-[12px]"
+      >
+        <span>Showing {{ tasks().length }} tasks</span>
+        <div class="flex items-center gap-2">
+        </div>
+      </div>
+    </div>
+    <a
+        [routerLink]="['/project', projectId(), 'tasks', 'new']"
+      class="fixed bottom-3 right-6 z-50 w-14 h-14 rounded-[5px] flex items-center justify-center shadow-lg bg-[var(--color-primary-container)] text-white"
+      aria-label="Create new project"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-6 h-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2.5"
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 4.5v15m7.5-7.5h-15"
+        />
+      </svg>
+    </a>
+  

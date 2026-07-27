@@ -134,7 +134,7 @@
       @if (activeView() === 'board') {
         <app-task-board-view [projectId]="id" [statuses]="statuses" [columns]="columns()" />
       } @else {
-        <span>Task Table List </span>
+        <app-task-list-view [projectId]="id" [tasks]="allTasks()" />
       }
     </div>
   }

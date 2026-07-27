@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ColumnData, TASK_STATUS_CONFIGS, ViewState } from '../../../../core/models/project.model';
 import { ProjectService } from '../../services/project.service';
 import { TaskBoardViewComponent } from './components/task-board-view/task-board-view.component';
+import { TaskListViewComponent } from './components/task-list-view/task-list-view.component';
 import { TaskListMobileViewComponent } from "./components/task-list-mobile-view/task-list-mobile-view.component";
 
 type TaskView = 'list' | 'board';
@@ -11,7 +12,7 @@ type TaskView = 'list' | 'board';
 @Component({
   selector: 'app-project-tasks-board',
   standalone: true,
-  imports: [RouterLink, TaskBoardViewComponent, TaskListMobileViewComponent],
+  imports: [RouterLink, TaskBoardViewComponent, TaskListViewComponent, TaskListMobileViewComponent],
   templateUrl: './project-tasks-board.component.html',
 })
 export class ProjectTasksBoardComponent implements OnInit {
