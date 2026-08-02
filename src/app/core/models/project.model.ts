@@ -82,6 +82,11 @@ export interface PagedResult<T> {
   total: number;
 
 }
+export interface TaskDropEvent {
+  task: EpicTask;
+  previousStatus: TaskStatus;
+  newStatus: TaskStatus;
+}
 export enum TaskStatus {
   ToDo = 'TO_DO',
   InProgress = 'IN_PROGRESS',

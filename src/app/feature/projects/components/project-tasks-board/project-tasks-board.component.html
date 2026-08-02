@@ -132,7 +132,12 @@
 
     <div class="hidden sm:block">
       @if (activeView() === 'board') {
-        <app-task-board-view [projectId]="id" [statuses]="statuses" [columns]="columns()" />
+        <app-task-board-view
+          [projectId]="id"
+          [statuses]="statuses"
+          [columns]="columns()"
+          (taskDropped)="TaskStatusDropped($event)"
+        />
       } @else {
         <app-task-list-view [projectId]="id" [tasks]="allTasks()" />
       }

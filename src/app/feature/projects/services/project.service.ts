@@ -112,4 +112,8 @@ export class ProjectService {
       .set('status', `eq.${status}`);
     return this.http.get<EpicTask[]>(`${this.baseUrl}/project_tasks`, { params });
   }
+
+  updateTaskStatus(taskId: string, status: TaskStatus): Observable<void> {
+    return this.http.patch<void>(`${this.baseUrl}/tasks?id=eq.${taskId}`, { status });
+  }
 }

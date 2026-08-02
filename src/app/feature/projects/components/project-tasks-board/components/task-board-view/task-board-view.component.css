@@ -15,11 +15,11 @@ border: 1px solid #C3C6D61A;
   box-shadow: var(--shadow-sm);
 }
 
-.task-card--overdue {
+.task-card-overdue {
   background-color: #fef2f2;
 }
 
-.task-card--today {
+.task-card-today {
   border-left: 4px solid var(--color-primary-container);
 }
 
@@ -36,7 +36,13 @@ border: 1px solid #C3C6D61A;
   color: var(--color-primary-container);
 }
 
-.task-avatar--today {
+.task-avatar-today {
   background-color: var(--color-primary-container);
   color: #fff;
+}
+
+
+.cdk-drag-placeholder {
+  opacity: 0;
+  transition: opacity 200ms ease;
 }

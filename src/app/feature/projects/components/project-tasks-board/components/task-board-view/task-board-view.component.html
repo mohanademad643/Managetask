@@ -1,6 +1,6 @@
-<div class="flex items-start gap-4 overflow-x-auto pb-4">
+<div class="flex items-start gap-4 overflow-x-auto pb-4" cdkDropListGroup>
   @for (column of statuses(); track column.status; let i = $index) {
-    <section class="flex flex-col flex-none w-[300px] h-[752] p-1">
+    <section class="flex flex-col flex-none w-[300px] h-100 max-h-[752px] p-1">
       <div class="flex items-center justify-between gap-2 mb-3">
         <div class="flex items-center gap-2 min-w-0">
           <span class="w-2 h-2 rounded-full flex-shrink-0" [style.backgroundColor]="'var(' + column.color + ')'"></span>
@@ -24,8 +24,13 @@
         </a>
       </div>
 
-      <!-- column body -->
-      <div class="flex flex-col gap-2.5 overflow-y-auto">
+      <div
+        cdkDropList
+        cdkDropListSortingDisabled
+        [cdkDropListData]="columns()[i].tasks"
+        (cdkDropListDropped)="onDrop($event, column)"
+        class="flex flex-col flex-1 min-h-0 gap-2.5 overflow-y-auto rounded-lg transition-colors duration-150"
+      >
         <a
           [routerLink]="['/project', projectId(), 'tasks', 'new']"
           [queryParams]="{ status: column.status }"
@@ -50,9 +55,11 @@
           @case ('data') {
             @for (task of columns()[i].tasks; track task.id) {
               <article
+                cdkDrag
+                [cdkDragData]="task"
                 class="task-card"
-                [class.task-card--overdue]="dueDateStatus(task.due_date) === 'overdue'"
-                [class.task-card--today]="dueDateStatus(task.due_date) === 'today'"
+                [class.task-card-overdue]="dueDateStatus(task.due_date) === 'overdue'"
+                [class.task-card-today]="dueDateStatus(task.due_date) === 'today'"
               >
                 <h3 class="text-[0.9rem] font-medium leading-snug text-[var(--color-text-body)]">
                   {{ task.title }}
@@ -92,7 +99,7 @@
                   @if (task.assignee) {
                     <span
                       class="task-avatar"
-                      [class.task-avatar--today]="dueDateStatus(task.due_date) === 'today'"
+                      [class.task-avatar-today]="dueDateStatus(task.due_date) === 'today'"
                       [attr.aria-label]="task.assignee.name"
                       [title]="task.assignee.name"
                     >
