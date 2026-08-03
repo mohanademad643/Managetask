@@ -10,8 +10,11 @@
   <app-skeleton-member />
 }
 @if (state() === "empty") {
-  <app-empty-state title="No Members" description="This project doesn't have any members yet."  
-  createLabel="Invite Member"/>
+  <app-empty-state
+    title="No Members"
+    description="This project doesn't have any members yet."
+    createLabel="Invite Member"
+    (create)="showInvitePopup.set(true)"
   />
 }
 @if (state() === "data") {
@@ -78,6 +81,7 @@
       <button
         type="button"
         class="hidden sm:inline-flex btn btn-primary w-auto px-6 gap-2"
+        (click)="showInvitePopup.set(true)"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -194,10 +198,11 @@
         </table>
       </div>
     </div>
-    <a
-      routerLink="/projects/create"
+    <button
+      type="button"
+      (click)="showInvitePopup.set(true)"
       class="sm:hidden fixed bottom-30 right-6 z-50 w-14 h-14 rounded-[5px] flex items-center justify-center shadow-lg bg-[var(--color-primary-container)] text-white"
-      aria-label="Create new project"
+      aria-label="Invite member"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -217,6 +222,15 @@
                1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
         />
       </svg>
-    </a>
+    </button>
   }
 
+@if (showInvitePopup() && projectId(); as id) {
+  <app-invite-member
+    [projectId]="id"
+    [projectName]="projectName()"
+    [currentMembers]="members()"
+    (closed)="showInvitePopup.set(false)"
+    (invited)="showInvitePopup.set(false)"
+  />
+}

@@ -116,4 +116,18 @@ export class ProjectService {
   updateTaskStatus(taskId: string, status: TaskStatus): Observable<void> {
     return this.http.patch<void>(`${this.baseUrl}/tasks?id=eq.${taskId}`, { status });
   }
+
+  
+    inviteMember(email: string, projectId: string): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/rpc/invite_member`, {
+      p_email: email,
+      p_project_id: projectId,
+      p_app_url: 'https://managetask-alpha.vercel.app',
+      p_base_url: environment.apiUrl,
+    });
+  }
+
+  acceptInvitation(token: string): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/rpc/accept_invitation`, { p_token: token });
+  }
 }

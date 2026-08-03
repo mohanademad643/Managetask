@@ -60,6 +60,14 @@ export const routes: Routes = [
       },
     ],
   },
+   {
+    path: 'invite',
+    loadComponent: () =>
+      import('./feature/projects/components/project-members/components/accept-invitation/accept-invitation.component').then(
+        (m) => m.AcceptInvitationComponent,
+      ),
+    title: 'Accept Invitation',
+  },
 
   { path: '**', redirectTo: 'project' ,pathMatch: 'full' },
 ];

@@ -1,0 +1,38 @@
+<div class="min-h-screen flex flex-col items-center justify-center gap-8 px-4 bg-gradient-to-br from-[var(--color-surface-highest)] via-[var(--color-background)] to-[var(--color-surface)]">
+  <div class="flex items-center gap-2">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="var(--color-primary-container)" class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+    </svg>
+    <span class="text-xl font-extrabold tracking-tight text-[var(--color-text-body)]">Taskly</span>
+  </div>
+
+  <div class="w-full max-w-md rounded-2xl bg-[var(--color-surface)] shadow-[var(--shadow-xl)] overflow-hidden">
+    <div class="h-1 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-container)]"></div>
+
+    <div class="p-8 text-center">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--color-surface-3)] text-[var(--color-primary-container)] text-[0.7rem] font-bold uppercase tracking-wide">
+          <img src="../../../assets/logo.png" alt="Taskly Logo" class="h-[20px] w-[18px]" />
+        New Project Invitation
+      </span>
+
+      <h1 class="mt-4 text-2xl font-bold leading-snug text-[var(--color-text-body)]">
+        You've been invited to join a project
+      </h1>
+
+      <button
+        type="button"
+        class="btn btn-primary mt-6 w-full"
+        [disabled]="isLoading() || !token()"
+        (click)="AcceptedInvitation()"
+      >
+        @if (isLoading()) {
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 animate-spin">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25" />
+            <path fill="currentColor" class="opacity-75" d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4Z" />
+          </svg>
+        }
+        {{ isLoading() ? 'Accepting…' : 'Accept Invitation' }}
+      </button>
+    </div>
+  </div>
+</div>

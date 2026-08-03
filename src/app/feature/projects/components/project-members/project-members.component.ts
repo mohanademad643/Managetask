@@ -14,6 +14,7 @@ import { EmptyStateComponent } from '../../../../shared/components/empty-state/e
 import { ProjectMember, ViewState } from '../../../../core/models/project.model';
 import { SkeletonMemberComponent } from "./components/skeleton-member/skeleton-member.component";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { InviteMemberComponent } from './components/invite-member/invite-member.component';
 
 @Component({
   selector: 'app-project-members',
@@ -22,7 +23,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     RouterLink,
     ErrorStateComponent,
     EmptyStateComponent,
-    SkeletonMemberComponent
+    SkeletonMemberComponent,
+    InviteMemberComponent,
 ],
   templateUrl: './project-members.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +36,7 @@ export class ProjectMembersComponent implements OnInit {
   readonly state = signal<ViewState>('loading');
   readonly members = signal<ProjectMember[]>([]);
   readonly projectId = signal<string | null>(null);
+  readonly showInvitePopup = signal(false);
 
   readonly projectName = computed(() => {
     const id = this.projectId();
