@@ -1,27 +1,102 @@
-# TaskManagement
+# Taskly
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
+Project management system for teams, built with Angular and Supabase.
 
-## Development server
+**Live Demo:** https://managetask-alpha.vercel.app/auth/login
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+**Repository:** https://github.com/mohanademad643/Managetask
 
-## Code scaffolding
+---
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Overview
 
-## Build
+Taskly helps teams organize work with a clear hierarchy: **Projects, Epics, and Tasks**. Teams can break large goals into manageable pieces, assign ownership, and track progress on a Kanban board.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Objectives
 
-## Running unit tests
+- Manage multiple projects in one place
+- Break down large objectives into epics and tasks
+- Assign responsibilities and track progress visually
+- Collaborate with team members through invitations
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Preview
 
-## Running end-to-end tests
+<!-- Add screenshots here, for example: -->
+<!-- ![Board view](docs/board.png) -->
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Features
 
-## Further help
+### Authentication
+- User signup and secure login
+- Secure session management
+- Forgot password and reset flow
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Project and Epic Management
+- Create, edit, and list projects
+- Manage epics inside each project, with deadlines and owner assignment
+- Hierarchical task organization: Project, Epic, Task
+
+### Team Collaboration
+- Invite members by email using a token-based invitation system
+
+### Task Workflow
+Each task moves through a defined lifecycle:
+
+```
+TO_DO -> IN_PROGRESS -> IN_REVIEW -> READY_FOR_QA -> READY_FOR_PRODUCTION -> DONE
+```
+
+Additional states: `BLOCKED` and `REOPENED`.
+
+### Board View
+- Kanban board with drag and drop
+- Quick task creation directly from any column
+
+### Search
+- Search tasks by title
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Angular 17 |
+| Styling | Tailwind CSS |
+| Backend and Database | Supabase (Auth, PostgreSQL) |
+| Package Manager | pnpm |
+| Code Quality | ESLint, Prettier |
+
+## Getting Started
+
+### Prerequisites
+
+- A [Supabase](https://supabase.com) project
+- [pnpm](https://pnpm.io) (it runs on Node.js 18 or higher, which is needed only for the Angular tooling and is not part of the backend)
+
+### Installation
+
+```bash
+git clone https://github.com/mohanademad643/Managetask.git
+cd Managetask
+pnpm install
+```
+
+### Configuration
+
+Add your Supabase project URL and public anon key to the Angular environment file in `src/environments/`.
+
+Use only the **anon** key in the frontend. Never commit the service role key.
+
+### Run
+
+```bash
+pnpm dev
+```
+
+## Author
+
+**Mohannad Emad** - Software Developer (Angular and .NET Core)
+
+- GitHub: https://github.com/mohanademad643
+- LinkedIn: https://www.linkedin.com/in/mohannad-emad-eldin-ramadan-499141263/
+- Email: mohannad.emad535@gmail.com
+- Phone: 01144244060
